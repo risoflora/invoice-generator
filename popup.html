@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/third-party/bootstrap.min.css" />
+    <title>Generate · Invoice generator</title>
+  </head>
+  <body class="bg-success bg-opacity-25">
+    <div class="container-sm p-2" style="width: 12rem">
+      <h6 class="bg-body text-success text-center bg-success bg-opacity-50 fw-bold shadow rounded-pill p-1">
+        <strong>Invoice Generator</strong>
+      </h6>
+
+      <div class="card mb-2">
+        <div class="card-header bg-success text-white bg-opacity-50 fw-bold">Reference</div>
+        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
+          <div class="row g-2">
+            <div class="col-12">
+              <select name="referenceMonth" class="form-select form-select-sm" aria-label="Reference month">
+                <option>January</option>
+                <option>February</option>
+                <option>March</option>
+                <option>April</option>
+                <option>May</option>
+                <option>June</option>
+                <option>July</option>
+                <option>August</option>
+                <option>September</option>
+                <option>October</option>
+                <option>November</option>
+                <option>December</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button name="generate" class="btn btn-success fw-bold w-100">Generate PDF</button>
+    </div>
+  </body>
+  <script type="module" src="popup.js"></script>
+</html>

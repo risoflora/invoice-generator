@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/third-party/bootstrap.min.css" />
+    <title>Options · Invoice generator</title>
+  </head>
+  <body class="bg-success bg-opacity-25">
+    <div class="container-sm py-4" style="max-width: 48rem">
+      <div class="card mb-2">
+        <div class="card-header bg-success text-white bg-opacity-50 fw-bold">Supplier</div>
+        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
+          <div class="row g-2">
+            <div class="col-12">
+              <input
+                type="text"
+                name="supplierDescription"
+                class="form-control form-control-sm"
+                maxlength="200"
+                placeholder="Description"
+                aria-label="Description"
+              />
+            </div>
+            <div class="col-12">
+              <textarea
+                name="supplierAddress"
+                class="form-control form-control-sm"
+                maxlength="1000"
+                rows="4"
+                placeholder="Address"
+                aria-label="Address"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-2">
+        <div class="card-header bg-success text-white bg-opacity-50 fw-bold">Customer</div>
+        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
+          <div class="row g-2">
+            <div class="col-12">
+              <input
+                type="text"
+                name="customerDescription"
+                class="form-control form-control-sm"
+                maxlength="200"
+                placeholder="Description"
+                aria-label="Description"
+              />
+            </div>
+            <div class="col-12">
+              <textarea
+                name="customerAddress"
+                class="form-control form-control-sm"
+                maxlength="1000"
+                rows="4"
+                placeholder="Address"
+                aria-label="Address"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-2">
+        <div class="card-header bg-success text-white bg-opacity-50 fw-bold">Intermediary bank</div>
+        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
+          <div class="row g-2">
+            <div class="col-12">
+              <textarea
+                name="intermediaryBankInfo"
+                class="form-control form-control-sm"
+                maxlength="1000"
+                rows="4"
+                placeholder="Info"
+                aria-label="Info"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-2">
+        <div class="card-header bg-success text-white bg-opacity-50 fw-bold">Bank</div>
+        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
+          <div class="row g-2">
+            <div class="col-12">
+              <textarea
+                name="bankInfo"
+                class="form-control form-control-sm"
+                maxlength="1000"
+                rows="4"
+                placeholder="Info"
+                aria-label="Info"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-2">
+        <div class="card-header bg-success text-white bg-opacity-50 fw-bold">Beneficiary</div>
+        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
+          <div class="row g-2">
+            <div class="col-7">
+              <input
+                type="text"
+                name="beneficiaryName"
+                class="form-control form-control-sm"
+                maxlength="200"
+                placeholder="Name"
+                aria-label="Name"
+              />
+            </div>
+            <div class="col-5">
+              <input
+                type="text"
+                name="beneficiaryIBAN"
+                class="form-control form-control-sm"
+                maxlength="29"
+                placeholder="IBAN"
+                aria-label="IBAN"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-2">
+        <div class="card-header bg-success text-white bg-opacity-50 fw-bold">Service</div>
+        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
+          <div class="row g-2">
+            <div class="col-6">
+              <input
+                type="text"
+                name="serviceDescription"
+                class="form-control form-control-sm"
+                maxlength="200"
+                placeholder="Description"
+                aria-label="Description"
+              />
+            </div>
+            <div class="col-2">
+              <input
+                type="text"
+                name="serviceLocale"
+                class="form-control form-control-sm"
+                maxlength="5"
+                placeholder="Locale"
+                aria-label="Locale"
+              />
+            </div>
+            <div class="col-2">
+              <input
+                type="text"
+                name="serviceCurrency"
+                class="form-control form-control-sm"
+                maxlength="3"
+                placeholder="Currency"
+                aria-label="Currency"
+              />
+            </div>
+            <div class="col-2">
+              <input
+                type="number"
+                name="serviceValue"
+                class="form-control form-control-sm"
+                min="1"
+                max="99999"
+                placeholder="Value"
+                aria-label="Value"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button name="save" class="btn btn-success fw-bold w-100" aria-disabled="true" disabled>Save changes</button>
+    </div>
+  </body>
+  <script type="module" src="options.js"></script>
+</html>
