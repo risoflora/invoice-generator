@@ -49,7 +49,7 @@ const createInvoice = () => ({
 
 const update = (enabled) => {
   saveButton.disabled = !enabled;
-  saveButton.ariaDisabled = !enabled;
+  saveButton.ariaDisabled = saveButton.disabled;
 };
 
 const load = async () => {

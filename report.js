@@ -1,4 +1,4 @@
-import { formatDate, formatNamedDate, formatMoney } from './utils.js';
+import { formatDate, formatMonth, formatNamedDate, formatMoney } from './utils.js';
 import { Document } from './doc.js';
 
 const MAX_COL_WIDTH = 68;
@@ -8,6 +8,7 @@ class Report {
   #invoice;
   #id;
   #date;
+  #dueOn;
   #referenceMonth;
 
   constructor(invoice) {
@@ -83,13 +84,10 @@ class Report {
     this.#doc.setXY(150);
     this.#doc.writeLine(formatNamedDate(this.#date), options);
 
-    const nextDate = new Date(this.#date);
-    const tenDays = 10;
-    nextDate.setDate(nextDate.getDate() + tenDays);
     this.#doc.setXY(110);
     this.#doc.write('Due on:');
     this.#doc.setXY(150);
-    this.#doc.writeLine(formatNamedDate(nextDate), options);
+    this.#doc.writeLine(formatNamedDate(this.#dueOn), options);
   }
 
   #generateServiceInfo() {
@@ -100,7 +98,7 @@ class Report {
     this.#doc.setFont({ weight: 'bold' }).setXY(30, this.#doc.height - 60);
     this.#doc.writeLine('SERVICE').writeLine();
     this.#doc.setFont({ weight: 'normal' });
-    this.#doc.writeLine(`${service?.description} referring to ${this.#referenceMonth} ${year}`);
+    this.#doc.writeLine(`${service?.description} referring to ${formatMonth(this.#referenceMonth)} ${year}`);
 
     this.#doc.setFont({ weight: 'bold' }).setXY(30, this.#doc.height - 40);
     this.#doc.writeLine('TOTAL');
@@ -114,10 +112,11 @@ class Report {
     );
   }
 
-  async generate(referenceMonth) {
+  async generate({ referenceMonth, dueOn }) {
     this.#id = crypto.randomUUID();
     this.#date = new Date();
     this.#referenceMonth = referenceMonth;
+    this.#dueOn = dueOn;
 
     this.#generatePropsAndHeaderInfo();
     this.#generateCompaniesInfo();
