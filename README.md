@@ -17,20 +17,41 @@ Install this extension from **[Web Store][web-store-url]**.
 
 Libraries used in this project:
 
-- [Bootstrap v5][bootstrap-url]
+- [Bootstrap][bootstrap-url]
 - [jsPDF][jspdf-url]
-- [Vanilla JS Datepicker][vanillajs-datepicker-url]
+- [React Datepicker][react-datepicker-url]
+
+## Build
+
+To build the extension for production:
+
+```bash
+yarn
+yarn build
+```
+
+and for development:
+
+```bash
+yarn
+yarn dev
+```
 
 ## Wish list
 
-- [ ] Export/import options
-- [ ] Migration to TypeScript
-- [ ] Webpack, Rollup or Vite support
+- [x] Vite support
+- [x] Migration to React
+- [x] Service/value customization per invoice
+- [x] Export/import options
+- [x] CI/CD
+- [ ] Multiple services
+- [ ] Invoice reminder
+- [ ] Invoice expression
 
 [web-store-url]: https://chrome.google.com/webstore/detail/invoice-generator/obdabdocagpfclncklefebhhgggkbbnk 'Invoice generator Web Store'
-[screenshot-01-url]: https://user-images.githubusercontent.com/1456829/161170913-4aba03ff-fff7-4644-b218-56b5edea1844.png 'Invoice generator'
-[screenshot-02-url]: https://user-images.githubusercontent.com/1456829/160723446-7a380782-6a8b-42ca-aa54-e8f994b40787.png 'Invoice generator options'
-[invoice-generator-logo-url]: https://user-images.githubusercontent.com/1456829/160723531-b3ca1905-5f77-443c-9360-d4b4f8b4005d.png 'Invoice generator logo'
-[bootstrap-url]: https://github.com/twbs/bootstrap 'Bootstrap v5 repository'
+[screenshot-01-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screen-shot-1.png 'Invoice generator'
+[screenshot-02-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screen-shot-2.png 'Invoice generator options'
+[invoice-generator-logo-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/logo.png 'Invoice generator logo'
+[bootstrap-url]: https://github.com/twbs/bootstrap 'Bootstrap repository'
 [jspdf-url]: https://github.com/parallax/jsPDF 'jsPDF repository'
-[vanillajs-datepicker-url]: https://github.com/mymth/vanillajs-datepicker 'Vanilla JS Datepicker repository'
+[react-datepicker-url]: https://github.com/Hacker0x01/react-datepicker 'React Datepicker repository'

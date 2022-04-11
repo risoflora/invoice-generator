@@ -1,25 +1,38 @@
-import './third-party/jspdf.umd.min.js';
+import jsPDF, { TextOptionsLight } from 'jspdf';
 
-import { readAsDataURL } from './utils.js';
+import { readAsDataURL } from './utils';
+
+export interface DocumentOptions {
+  style?: string;
+  size?: number;
+  weight?: string | number;
+  maxWidth?: number;
+  color?: number;
+  align?: string;
+}
+
+export type DocumentTextOptions = TextOptionsLight;
 
 class Document {
   #pdf;
-  #x;
-  #y;
+  #x!: number;
+  #y!: number;
+  height: number;
+  width: number;
 
   constructor() {
-    this.#pdf = new jspdf.jsPDF({ putOnlyUsedFonts: true, compress: true });
+    this.#pdf = new jsPDF({ putOnlyUsedFonts: true, compress: true });
     this.height = this.#pdf.internal.pageSize.height || this.#pdf.internal.pageSize.getHeight();
     this.width = this.#pdf.internal.pageSize.width || this.#pdf.internal.pageSize.getWidth();
   }
 
-  #getLineHeight(text = '') {
+  #getLineHeight() {
     const lineHeightOffset = 0.3;
-    return this.#pdf.getLineHeight(text) / this.#pdf.internal.scaleFactor + lineHeightOffset;
+    return this.#pdf.getLineHeight() / this.#pdf.internal.scaleFactor + lineHeightOffset;
   }
 
-  #breakLine(text, options) {
-    const lineHeight = this.#getLineHeight(text);
+  #breakLine(text = '', options?: DocumentOptions) {
+    const lineHeight = this.#getLineHeight();
     if (options?.maxWidth) {
       const splittedText = this.#pdf.splitTextToSize(text, options.maxWidth);
       const lines = splittedText.length;
@@ -30,31 +43,29 @@ class Document {
     }
   }
 
-  setTitle(title) {
+  setTitle(title: string) {
     this.#pdf.setDocumentProperties({ title });
     return this;
   }
 
-  setAuthor(author) {
+  setAuthor(author: string) {
     this.#pdf.setDocumentProperties({ author });
     return this;
   }
 
-  setFont(options) {
+  setFont(options: DocumentOptions) {
     if (options) {
       this.#pdf.setFont(this.#pdf.getFont().fontName, options?.style || 'normal', options?.weight || 'normal');
       if (options?.size) {
         this.#pdf.setFontSize(options.size);
       }
-      this.#pdf.setTextColor(options.color || 0);
+      this.#pdf.setTextColor(options?.color || 0);
     }
     return this;
   }
 
-  setXY(x, y) {
-    if (x) {
-      this.#x = x;
-    }
+  setXY(x: number, y?: number) {
+    this.#x = x;
     if (y) {
       this.#y = y;
     }
@@ -65,13 +76,13 @@ class Document {
     return { x: this.#x, y: this.#y };
   }
 
-  write(text, options) {
+  write(text: string | string[], options?: DocumentTextOptions) {
     this.#pdf.text(text, this.#x, this.#y, options);
     return this;
   }
 
-  writeLine(text = '', options) {
-    this.write(text, options);
+  writeLine(text = '', options?: DocumentOptions) {
+    this.write(text, options as TextOptionsLight);
     this.#breakLine(text, options);
     return this;
   }

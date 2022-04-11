@@ -1,22 +1,30 @@
-import { formatDate, formatMonth, formatNamedDate, formatMoney } from './utils.js';
-import { Document } from './doc.js';
+import { TextOptionsLight } from 'jspdf';
+
+import { formatDate, formatMonth, formatNamedDate, formatMoney } from './utils';
+import { Invoice } from './invoice';
+import { Document } from './doc';
 
 const MAX_COL_WIDTH = 68;
+
+export interface ReportOptions {
+  referenceMonth: Date;
+  dueOn?: Date;
+}
 
 class Report {
   #doc;
   #invoice;
-  #id;
-  #date;
-  #dueOn;
-  #referenceMonth;
+  #id?: string;
+  #date!: Date;
+  #dueOn?: Date;
+  #referenceMonth!: Date;
 
-  constructor(invoice) {
+  constructor(invoice: Invoice) {
     this.#doc = new Document();
     this.#invoice = invoice;
   }
 
-  #generateDocumentProperties(title) {
+  #generateDocumentProperties(title: string) {
     const { supplier } = this.#invoice;
     this.#doc.setTitle(`${title}`).setAuthor(`${supplier?.description}`);
   }
@@ -31,7 +39,7 @@ class Report {
     this.#doc.writeLine(title, options);
 
     this.#doc.setFont({ weight: 'normal', size: 7, color: 100 });
-    this.#doc.write(`ID: ${this.#id}`, options);
+    this.#doc.write(`ID: ${this.#id}`, options as TextOptionsLight);
   }
 
   #generateCompaniesInfo() {
@@ -84,10 +92,12 @@ class Report {
     this.#doc.setXY(150);
     this.#doc.writeLine(formatNamedDate(this.#date), options);
 
-    this.#doc.setXY(110);
-    this.#doc.write('Due on:');
-    this.#doc.setXY(150);
-    this.#doc.writeLine(formatNamedDate(this.#dueOn), options);
+    if (this.#dueOn) {
+      this.#doc.setXY(110);
+      this.#doc.write('Due on:');
+      this.#doc.setXY(150);
+      this.#doc.writeLine(formatNamedDate(this.#dueOn), options);
+    }
   }
 
   #generateServiceInfo() {
@@ -98,7 +108,7 @@ class Report {
     this.#doc.setFont({ weight: 'bold' }).setXY(30, this.#doc.height - 60);
     this.#doc.writeLine('SERVICE').writeLine();
     this.#doc.setFont({ weight: 'normal' });
-    this.#doc.writeLine(`${service?.description} referring to ${formatMonth(this.#referenceMonth)} ${year}`);
+    this.#doc.writeLine(`${service?.description || ''} referring to ${formatMonth(this.#referenceMonth)} ${year}`);
 
     this.#doc.setFont({ weight: 'bold' }).setXY(30, this.#doc.height - 40);
     this.#doc.writeLine('TOTAL');
@@ -107,12 +117,12 @@ class Report {
 
     this.#doc.setFont({ weight: 'bold', size: 10 }).setXY(this.#doc.width - this.#doc.getXY().x);
     this.#doc.writeLine(
-      formatMoney(service?.locale || 'en-US', service?.currency || 'USD', Number(service?.value).toFixed(2)),
+      formatMoney(service?.locale || 'en-US', service?.currency || 'USD', Number(service?.value)),
       options
     );
   }
 
-  async generate({ referenceMonth, dueOn }) {
+  async generate({ referenceMonth, dueOn }: ReportOptions): Promise<chrome.downloads.DownloadOptions> {
     this.#id = crypto.randomUUID();
     this.#date = new Date();
     this.#referenceMonth = referenceMonth;

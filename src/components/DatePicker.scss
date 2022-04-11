@@ -1,0 +1,33 @@
+.date-picker-clear-btn::after {
+  background-color: rgb(21, 115, 71) !important;
+}
+
+.date-picker-today-btn {
+  pointer-events: auto;
+}
+.date-picker-today-btn:disabled {
+  pointer-events: none;
+}
+
+.react-datepicker__today-button {
+  border-bottom-right-radius: 0.2rem;
+  border-bottom-left-radius: 0.2rem;
+  pointer-events: none;
+  cursor: default !important;
+}
+
+.react-datepicker__day {
+  border-radius: 0.3rem;
+}
+
+.react-datepicker__day:focus-visible {
+  outline-style: solid;
+}
+
+.react-datepicker__day--today {
+  color: white !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: rgba(25, 135, 84, 0.75) !important;
+}

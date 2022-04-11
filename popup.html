@@ -1,51 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/third-party/bootstrap.min.css" />
-    <link rel="stylesheet" href="/third-party/datepicker-bs5.min.css" />
-    <link rel="stylesheet" href="dateInput.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Generate · Invoice generator</title>
   </head>
-  <body class="bg-success bg-opacity-25">
-    <div class="container-sm p-2" style="width: 18rem">
-      <h6 class="bg-body text-success text-center bg-success bg-opacity-50 fw-bold shadow rounded-pill p-1">
-        <strong>Invoice Generator</strong>
-      </h6>
-
-      <div class="card mb-2">
-        <div class="card-header text-white bg-success bg-opacity-50 fw-bold">Reference / Due on</div>
-        <div class="card-body bg-success text-dark bg-opacity-10 p-2">
-          <div class="row g-2">
-            <div class="col">
-              <input
-                type="text"
-                name="referenceMonth"
-                class="form-control form-control-sm"
-                placeholder="MM/DD/YYYY"
-                aria-label="MM/DD/YYYY"
-                required
-              />
-            </div>
-            <div class="col">
-              <input
-                type="text"
-                name="dueOn"
-                class="form-control form-control-sm"
-                placeholder="MM/DD/YYYY"
-                aria-label="MM/DD/YYYY"
-                required
-              />
-            </div>
-            <span class="badge bg-success bg-opacity-50" name="daysCounter"></span>
-          </div>
-        </div>
-      </div>
-
-      <button name="generate" class="btn btn-success fw-bold w-100" disabled aria-disabled="true">Generate PDF</button>
-    </div>
+  <body>
+    <div id="popup"></div>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
-  <script type="module" src="dateInput.js"></script>
-  <script type="module" src="popup.js"></script>
 </html>
