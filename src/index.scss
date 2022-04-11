@@ -1,0 +1,7 @@
+body {
+  @extend .bg-success, .bg-opacity-25;
+}
+
+@import 'bootstrap/scss/bootstrap.scss';
+@import 'bootstrap-icons/font/bootstrap-icons.scss';
+@import 'react-datepicker/src/stylesheets/datepicker.scss';
