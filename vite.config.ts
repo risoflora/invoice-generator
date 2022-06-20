@@ -38,6 +38,7 @@ const getReleaseName = () => `dist/${process.env.npm_package_name}-v${process.en
 
 export default defineConfig({
   build: {
+    sourcemap: !isProduction(),
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: {
