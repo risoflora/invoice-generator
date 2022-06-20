@@ -14,8 +14,8 @@ const Section: FunctionComponent<Props & JSX.IntrinsicElements['div']> = ({
   children,
   ...props
 }) => (
-  <div className={`card mb-2${className ? ` ${className}` : ''}`} {...props}>
-    <div className="card-header text-white bg-success bg-opacity-50 fw-bold">
+  <div className={`card mb-1${className ? ` ${className}` : ''}`} {...props}>
+    <div className="card-header text-white bg-success bg-opacity-50 fw-bold py-1">
       <Icon className="me-2" name={icon} alt={title} />
       {title}
     </div>
