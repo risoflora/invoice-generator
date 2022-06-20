@@ -1,6 +1,6 @@
 {
-  "name": "Invoice generator",
-  "description": "Invoice generator",
+  "name": "$name",
+  "description": "$name",
   "version": "$version",
   "manifest_version": 3,
   "permissions": ["downloads", "storage"],

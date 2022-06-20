@@ -51,7 +51,11 @@ export default defineConfig({
             {
               src: 'manifest.json',
               dest: 'dist',
-              transform: (contents) => contents.toString().replace('$version', process.env.npm_package_version)
+              transform: (contents) =>
+                contents
+                  .toString()
+                  .replace('$version', process.env.npm_package_version)
+                  .replace(/\$name/g, process.env.npm_package_description)
             }
           ]
         })

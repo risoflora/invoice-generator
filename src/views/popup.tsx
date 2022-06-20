@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { description as pkgDescription, version as pkgVersion } from '../../package.json';
+
 import { useIsFirstRender } from '../hooks/useIsFirstRender';
 import { daysBetween, isSameDate } from '../core/utils';
 import { load } from '../core/storage';
@@ -67,7 +69,9 @@ const Popup = () => {
 
   return (
     <Container style={{ width: '18rem' }}>
-      <Hero logo={logo}>Invoice Generator</Hero>
+      <Hero logo={logo}>
+        {pkgDescription} v{pkgVersion}
+      </Hero>
       <Row title="Reference / Due on" icon="calendar-range">
         <Col>
           <DatePicker selected={referenceMonth} minDate={new Date()} required onChange={handleReferenceMonth} />
