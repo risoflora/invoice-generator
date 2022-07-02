@@ -1,3 +1,11 @@
+import { format as formatFns } from 'date-fns';
+
+const DEFAULT_DATE_FORMAT = 'MM/dd/yyyy';
+
+const DEFAULT_LOCALE = 'en-US';
+
+const DEFAULT_CURRENCY = 'USD';
+
 function isSameDate(date1: Date, date2: Date) {
   return (
     date1.getFullYear() === date2.getFullYear() &&
@@ -11,18 +19,15 @@ function daysBetween(startDate: Date, endDate: Date) {
   return Math.ceil(diff / (1000 * 3600 * 24));
 }
 
-const formatDate = (date: Date) =>
-  `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
-    .getDate()
-    .toString()
-    .padStart(2, '0')}`;
+const formatDate = (date: Date, format: string = DEFAULT_DATE_FORMAT) => formatFns(date, format);
 
-const formatMonth = (date: Date) => date.toLocaleString('en-US', { month: 'long' });
+const formatMonth = (date: Date, locale: string) => date.toLocaleString(locale, { month: 'long' });
 
-const formatNamedDate = (date: Date) => `${formatMonth(date)} ${date.getDate()}, ${date.getFullYear()}`;
+const formatNamedDate = (date: Date, locale: string) =>
+  `${formatMonth(date, locale)} ${date.getDate()}, ${date.getFullYear()}`;
 
-const formatMoney = (locale: string, currency: string, value: number) =>
-  `${currency || ''} ${new Intl.NumberFormat(locale, { style: 'currency', currency }).format(value || 0)}`;
+const formatMoney = (value: number, currency: string, locale: string) =>
+  `${currency} ${new Intl.NumberFormat(locale, { style: 'currency', currency }).format(value || 0)}`;
 
 const readAsDataURL = (blob: Blob) =>
   new Promise<string>((resolve, reject) => {
@@ -34,4 +39,16 @@ const readAsDataURL = (blob: Blob) =>
 
 const asDataURL = (data: any) => readAsDataURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
 
-export { isSameDate, daysBetween, formatDate, formatMonth, formatNamedDate, formatMoney, readAsDataURL, asDataURL };
+export {
+  DEFAULT_DATE_FORMAT,
+  DEFAULT_LOCALE,
+  DEFAULT_CURRENCY,
+  isSameDate,
+  daysBetween,
+  formatDate,
+  formatMonth,
+  formatNamedDate,
+  formatMoney,
+  readAsDataURL,
+  asDataURL
+};

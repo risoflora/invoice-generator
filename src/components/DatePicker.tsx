@@ -3,7 +3,17 @@ import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker';
 
 import './DatePicker.scss';
 
-const Button: FunctionComponent<ReactDatePickerProps> = ({ className, ...props }) => {
+type Props = {
+  dateFormat?: string;
+  placeholder?: string;
+};
+
+const DatePicker: FunctionComponent<Props & ReactDatePickerProps> = ({
+  className,
+  dateFormat,
+  placeholder,
+  ...props
+}) => {
   const currentDate = new Date();
 
   const getFilterDate = (date: Date) => ![0, 6].includes(date.getDay());
@@ -38,10 +48,11 @@ const Button: FunctionComponent<ReactDatePickerProps> = ({ className, ...props }
       popperClassName="pb-2 px-2"
       popperPlacement="auto"
       filterDate={getFilterDate}
-      placeholderText="MM/DD/YYYY"
+      dateFormat={dateFormat}
+      placeholderText={placeholder}
       {...props}
     />
   );
 };
 
-export default Button;
+export default DatePicker;

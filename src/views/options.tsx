@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
+import { description as pkgDescription, version as pkgVersion } from '../../package.json';
+
 import { useIsFirstRender } from '../hooks/useIsFirstRender';
-import { asDataURL } from '../core/utils';
+import { DEFAULT_DATE_FORMAT, asDataURL } from '../core/utils';
 import { load, save } from '../core/storage';
 import { Invoice } from '../core/invoice';
 
@@ -14,6 +16,9 @@ import ButtonGroup from '../components/ButtonGroup';
 import File from '../components/File';
 import Link from '../components/Link';
 import Button from '../components/Button';
+import Nav from '../components/Nav';
+
+import logo from '../favicon.svg';
 
 const Options = () => {
   const [supplierDescription, setSupplierDescription] = useState<string>();
@@ -25,14 +30,15 @@ const Options = () => {
   const [beneficiaryName, setBeneficiaryName] = useState<string>();
   const [beneficiaryIBAN, setBeneficiaryIBAN] = useState<string>();
   const [serviceDescription, setServiceDescription] = useState<string>();
-  const [serviceLocale, setServiceLocale] = useState<string>();
-  const [serviceCurrency, setServiceCurrency] = useState<string>();
   const [serviceValue, setServiceValue] = useState<string>();
+  const [configurationDateFormat, setConfigurationDateFormat] = useState<string>();
+  const [configurationLocale, setConfigurationLocale] = useState<string>();
+  const [configurationCurrency, setConfigurationCurrency] = useState<string>();
   const [exportUrl, setExportUrl] = useState<string>();
   const [isSaved, setIsSaved] = useState(true);
   const isFirstRender = useIsFirstRender();
 
-  const createInvoice = () => ({
+  const createInvoice = (): Invoice => ({
     supplier: {
       description: supplierDescription,
       address: supplierAddress
@@ -53,14 +59,17 @@ const Options = () => {
     },
     service: {
       description: serviceDescription,
-      locale: serviceLocale,
-      currency: serviceCurrency,
       value: serviceValue
+    },
+    configuration: {
+      dateFormat: configurationDateFormat,
+      locale: configurationLocale,
+      currency: configurationCurrency
     }
   });
 
   const loadInvoice = (invoice: Invoice) => {
-    const { supplier, customer, intermediaryBank, bank, beneficiary, service } = invoice;
+    const { supplier, customer, intermediaryBank, bank, beneficiary, service, configuration } = invoice;
 
     setSupplierDescription(supplier?.description || '');
     setSupplierAddress(supplier?.address || '');
@@ -75,9 +84,11 @@ const Options = () => {
     setBeneficiaryIBAN(beneficiary?.iban || '');
 
     setServiceDescription(service?.description || '');
-    setServiceLocale(service?.locale || '');
-    setServiceCurrency(service?.currency || '');
     setServiceValue(service?.value || '');
+
+    setConfigurationDateFormat(configuration?.dateFormat || '');
+    setConfigurationLocale(configuration?.locale || '');
+    setConfigurationCurrency(configuration?.currency || '');
   };
 
   const handleSupplierDescription = (value: string) => {
@@ -125,18 +136,23 @@ const Options = () => {
     setIsSaved(false);
   };
 
-  const handleServiceLocale = (value: string) => {
-    setServiceLocale(value);
-    setIsSaved(false);
-  };
-
-  const handleServiceCurrency = (value: string) => {
-    setServiceCurrency(value);
-    setIsSaved(false);
-  };
-
   const handleServiceValue = (value: string) => {
     setServiceValue(value);
+    setIsSaved(false);
+  };
+
+  const handleConfigurationDateFormat = (value: string) => {
+    setConfigurationDateFormat(value);
+    setIsSaved(false);
+  };
+
+  const handleConfigurationLocale = (value: string) => {
+    setConfigurationLocale(value);
+    setIsSaved(false);
+  };
+
+  const handleConfigurationCurrency = (value: string) => {
+    setConfigurationCurrency(value);
     setIsSaved(false);
   };
 
@@ -166,6 +182,20 @@ const Options = () => {
 
   return (
     <Container style={{ maxWidth: '48rem' }}>
+      <Nav logo={logo} title={`${pkgDescription} v${pkgVersion}`}>
+        <ButtonGroup className="flex-grow-1">
+          <File icon="box-arrow-in-down" accept=".json,application/json" fullWidth onFileChange={handleImport}>
+            Import
+          </File>
+          <Link href={exportUrl} download="invoice-generator-settings.json" icon="box-arrow-up" fullWidth>
+            Export
+          </Link>
+          <Button icon="save2" disabled={isSaved} fullWidth onClick={handleSave}>
+            Save
+          </Button>
+        </ButtonGroup>
+      </Nav>
+
       <Row title="Supplier" icon="globe">
         <Col size={12}>
           <Input
@@ -182,7 +212,7 @@ const Options = () => {
             placeholder="Address"
             value={supplierAddress}
             onChange={({ target }) => handleSupplierAddress(target.value)}
-          ></TextArea>
+          />
         </Col>
       </Row>
 
@@ -202,7 +232,7 @@ const Options = () => {
             placeholder="Address"
             value={customerAddress}
             onChange={({ target }) => handleCustomerAddress(target.value)}
-          ></TextArea>
+          />
         </Col>
       </Row>
 
@@ -214,7 +244,7 @@ const Options = () => {
             placeholder="Info"
             value={intermediaryBankInfo}
             onChange={({ target }) => handleIntermediaryBankInfo(target.value)}
-          ></TextArea>
+          />
         </Col>
       </Row>
 
@@ -226,7 +256,7 @@ const Options = () => {
             placeholder="Info"
             value={bankInfo}
             onChange={({ target }) => handleBankInfo(target.value)}
-          ></TextArea>
+          />
         </Col>
       </Row>
 
@@ -250,7 +280,7 @@ const Options = () => {
       </Row>
 
       <Row title="Service" icon="check-circle">
-        <Col size={6}>
+        <Col size={9}>
           <Input
             maxLength={200}
             placeholder="Description"
@@ -258,23 +288,7 @@ const Options = () => {
             onChange={({ target }) => handleServiceDescription(target.value)}
           />
         </Col>
-        <Col size={2}>
-          <Input
-            maxLength={5}
-            placeholder="Locale"
-            value={serviceLocale}
-            onChange={({ target }) => handleServiceLocale(target.value)}
-          />
-        </Col>
-        <Col size={2}>
-          <Input
-            maxLength={3}
-            placeholder="Currency"
-            value={serviceCurrency}
-            onChange={({ target }) => handleServiceCurrency(target.value)}
-          />
-        </Col>
-        <Col size={2}>
+        <Col size={2} className="flex-fill">
           <Input
             type="number"
             min={0}
@@ -287,17 +301,32 @@ const Options = () => {
         </Col>
       </Row>
 
-      <ButtonGroup>
-        <File icon="box-arrow-in-down" accept=".json,application/json" onFileChange={handleImport}>
-          Import
-        </File>
-        <Link href={exportUrl} download="invoice-generator-settings.json" icon="box-arrow-up">
-          Export
-        </Link>
-        <Button icon="save2" disabled={isSaved} onClick={handleSave}>
-          Save all
-        </Button>
-      </ButtonGroup>
+      <Row title="Configuration" icon="gear">
+        <Col size={4}>
+          <Input
+            maxLength={10}
+            placeholder={configurationDateFormat || DEFAULT_DATE_FORMAT}
+            value={configurationDateFormat}
+            onChange={({ target }) => handleConfigurationDateFormat(target.value)}
+          />
+        </Col>
+        <Col size={4}>
+          <Input
+            maxLength={5}
+            placeholder="en-US"
+            value={configurationLocale}
+            onChange={({ target }) => handleConfigurationLocale(target.value)}
+          />
+        </Col>
+        <Col size={4}>
+          <Input
+            maxLength={3}
+            placeholder="USD"
+            value={configurationCurrency}
+            onChange={({ target }) => handleConfigurationCurrency(target.value)}
+          />
+        </Col>
+      </Row>
     </Container>
   );
 };

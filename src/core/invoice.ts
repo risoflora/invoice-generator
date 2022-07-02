@@ -23,9 +23,13 @@ interface Beneficiary {
 
 interface Service {
   description?: string;
+  value?: string;
+}
+
+interface Configuration {
+  dateFormat?: string;
   locale?: string;
   currency?: string;
-  value?: string;
 }
 
 interface Invoice {
@@ -35,6 +39,7 @@ interface Invoice {
   bank: Bank;
   beneficiary: Beneficiary;
   service: Service;
+  configuration: Configuration;
 }
 
 export type { Supplier, Customer, IntermediaryBank, Bank, Beneficiary, Service, Invoice };

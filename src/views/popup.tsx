@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { description as pkgDescription, version as pkgVersion } from '../../package.json';
 
 import { useIsFirstRender } from '../hooks/useIsFirstRender';
-import { daysBetween, isSameDate } from '../core/utils';
+import { DEFAULT_DATE_FORMAT, daysBetween, isSameDate } from '../core/utils';
 import { load } from '../core/storage';
 import { Invoice } from '../core/invoice';
 import { Report, ReportOptions } from '../core/report';
@@ -27,6 +27,7 @@ const Popup = () => {
   const [remainingDays, setRemainingDays] = useState<string>();
   const [serviceDescription, setServiceDescription] = useState<string>();
   const [serviceValue, setServiceValue] = useState<string>();
+  const [configurationDateFormat, setConfigurationDateFormat] = useState<string>();
   const isFirstRender = useIsFirstRender();
 
   const hasDates = () => referenceMonth && dueOn;
@@ -60,9 +61,10 @@ const Popup = () => {
       setRemainingDays('');
     }
     if (isFirstRender) {
-      load<Invoice>().then(({ service }) => {
+      load<Invoice>().then(({ service, configuration }) => {
         setServiceDescription(service?.description);
         setServiceValue(service?.value);
+        setConfigurationDateFormat(configuration?.dateFormat || DEFAULT_DATE_FORMAT);
       });
     }
   }, [referenceMonth, dueOn]);
@@ -74,13 +76,22 @@ const Popup = () => {
       </Hero>
       <Row title="Reference / Due on" icon="calendar-range">
         <Col>
-          <DatePicker selected={referenceMonth} minDate={new Date()} required onChange={handleReferenceMonth} />
+          <DatePicker
+            selected={referenceMonth}
+            minDate={new Date()}
+            dateFormat={configurationDateFormat}
+            placeholder={configurationDateFormat}
+            required
+            onChange={handleReferenceMonth}
+          />
         </Col>
         <Col>
           <DatePicker
             selected={dueOn}
             minDate={referenceMonth}
             disabled={!referenceMonth}
+            dateFormat={configurationDateFormat}
+            placeholder={configurationDateFormat}
             required
             onChange={handleDueOn}
           />
@@ -111,10 +122,10 @@ const Popup = () => {
       </Row>
 
       <ButtonGroup>
-        <Button icon="gear" onClick={handleSettings}>
+        <Button icon="gear" fullWidth onClick={handleSettings}>
           Settings
         </Button>
-        <Button icon="filetype-pdf" onClick={handleGenerate}>
+        <Button icon="filetype-pdf" fullWidth onClick={handleGenerate}>
           Generate
         </Button>
       </ButtonGroup>

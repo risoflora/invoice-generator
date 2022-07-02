@@ -1,6 +1,6 @@
 import { TextOptionsLight } from 'jspdf';
 
-import { formatDate, formatMonth, formatNamedDate, formatMoney } from './utils';
+import { DEFAULT_LOCALE, DEFAULT_CURRENCY, formatDate, formatMonth, formatNamedDate, formatMoney } from './utils';
 import { Invoice } from './invoice';
 import { Document } from './doc';
 
@@ -30,8 +30,9 @@ class Report {
   }
 
   #generatePropsAndHeaderInfo() {
-    const options = { align: 'right' };
-    const title = `INVOICE ${formatDate(this.#date)}`;
+    const options: TextOptionsLight = { align: 'right' };
+    const { configuration } = this.#invoice;
+    const title = `INVOICE FOR ${formatDate(this.#date, configuration.dateFormat)}`;
 
     this.#generateDocumentProperties(title);
 
@@ -39,20 +40,20 @@ class Report {
     this.#doc.writeLine(title, options);
 
     this.#doc.setFont({ weight: 'normal', size: 7, color: 100 });
-    this.#doc.write(`ID: ${this.#id}`, options as TextOptionsLight);
+    this.#doc.write(`ID: ${this.#id}`, options);
   }
 
   #generateCompaniesInfo() {
     const { supplier, customer } = this.#invoice;
     const options = { maxWidth: MAX_COL_WIDTH };
 
-    this.#doc.setFont({ weight: 'bold', size: 9 }).setXY(30, 80);
+    this.#doc.setFont({ weight: 'bold', size: 9 }).setXY(30, 60);
     this.#doc.writeLine('SUPPLIER').writeLine();
     this.#doc.writeLine(supplier?.description, options);
     this.#doc.setFont({ weight: 'normal' });
     this.#doc.writeLine(supplier?.address, options);
 
-    this.#doc.setFont({ weight: 'bold' }).setXY(110, 80);
+    this.#doc.setFont({ weight: 'bold' }).setXY(110, 60);
     this.#doc.writeLine('CUSTOMER').writeLine();
     this.#doc.writeLine(customer?.description, options);
     this.#doc.setFont({ weight: 'normal' });
@@ -63,7 +64,7 @@ class Report {
     const { intermediaryBank, bank, beneficiary } = this.#invoice;
     const options = { maxWidth: MAX_COL_WIDTH };
 
-    this.#doc.setFont({ weight: 'bold' }).setXY(30, 130);
+    this.#doc.setFont({ weight: 'bold' }).setXY(30, 90);
     if (intermediaryBank?.info) {
       this.#doc.writeLine('INTERMEDIARY BANK').writeLine();
       this.#doc.setFont({ weight: 'normal' });
@@ -82,44 +83,50 @@ class Report {
     if (beneficiary?.iban) {
       this.#doc.writeLine(`IBAN: ${beneficiary.iban}`);
     }
-  }
-
-  #generateDatesInfo() {
-    const options = { align: 'right' };
-
-    this.#doc.setXY(110, this.#doc.height / 2);
-    this.#doc.write('Issued on:');
-    this.#doc.setXY(150);
-    this.#doc.writeLine(formatNamedDate(this.#date), options);
-
-    if (this.#dueOn) {
-      this.#doc.setXY(110);
-      this.#doc.write('Due on:');
-      this.#doc.setXY(150);
-      this.#doc.writeLine(formatNamedDate(this.#dueOn), options);
-    }
+    this.#doc.writeLine();
   }
 
   #generateServiceInfo() {
-    const { service } = this.#invoice;
+    const { service, configuration } = this.#invoice;
+    const locale = configuration?.locale || DEFAULT_LOCALE;
     const options = { align: 'right' };
     const year = new Date().getFullYear();
 
-    this.#doc.setFont({ weight: 'bold' }).setXY(30, this.#doc.height - 60);
+    this.#doc.setFont({ weight: 'bold' }).writeLine();
     this.#doc.writeLine('SERVICE').writeLine();
     this.#doc.setFont({ weight: 'normal' });
-    this.#doc.writeLine(`${service?.description || ''} referring to ${formatMonth(this.#referenceMonth)} ${year}`);
+    this.#doc.writeLine(
+      `${service?.description || ''} referring to ${formatMonth(this.#referenceMonth, locale)} ${year}`
+    );
 
-    this.#doc.setFont({ weight: 'bold' }).setXY(30, this.#doc.height - 40);
+    this.#doc.setFont({ weight: 'bold' }).setXY(30).writeLine();
     this.#doc.writeLine('TOTAL');
 
     this.#doc.writeSeparator();
 
     this.#doc.setFont({ weight: 'bold', size: 10 }).setXY(this.#doc.width - this.#doc.getXY().x);
     this.#doc.writeLine(
-      formatMoney(service?.locale || 'en-US', service?.currency || 'USD', Number(service?.value)),
+      formatMoney(Number(service?.value), configuration?.currency || DEFAULT_CURRENCY, locale),
       options
     );
+  }
+
+  #generateDatesInfo() {
+    const { configuration } = this.#invoice;
+    const locale = configuration?.locale || DEFAULT_LOCALE;
+    const options: TextOptionsLight = { align: 'right' };
+
+    this.#doc.setFont({ weight: 'normal' }).setXY(126, this.#doc.height / 2 - 40);
+    this.#doc.write('Issued on:', options);
+    this.#doc.setXY(150);
+    this.#doc.writeLine(formatNamedDate(this.#date, locale), options);
+
+    if (this.#dueOn) {
+      this.#doc.setXY(126);
+      this.#doc.write('Due on:', options);
+      this.#doc.setXY(150);
+      this.#doc.writeLine(formatNamedDate(this.#dueOn, locale), options);
+    }
   }
 
   async generate({ referenceMonth, dueOn }: ReportOptions): Promise<chrome.downloads.DownloadOptions> {
@@ -131,8 +138,8 @@ class Report {
     this.#generatePropsAndHeaderInfo();
     this.#generateCompaniesInfo();
     this.#generateBanksInfo();
-    this.#generateDatesInfo();
     this.#generateServiceInfo();
+    this.#generateDatesInfo();
 
     return { url: await this.#doc.data(), filename: `Invoice-${this.#id}.pdf` };
   }
