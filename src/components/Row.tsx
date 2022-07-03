@@ -23,7 +23,7 @@ const Row: FunctionComponent<Props & JSX.IntrinsicElements['div']> = ({
       {extra && <div className="d-inline-flex ms-auto">{extra}</div>}
     </div>
     <div className="card-body bg-success text-dark bg-opacity-10 p-2">
-      <div className="row g-2">{children}</div>
+      <div className="align-items-center row g-2">{children}</div>
     </div>
   </div>
 );

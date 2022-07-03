@@ -15,6 +15,7 @@ const Link: FunctionComponent<Props & JSX.IntrinsicElements['a']> = ({
   ...props
 }) => {
   const alt = typeof children === 'string' ? (children as string) : undefined;
+
   return (
     <a
       className={`d-flex align-items-center justify-content-center btn btn-success fw-bold${fullWidth ? ' w-100' : ''}${

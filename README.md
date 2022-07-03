@@ -4,8 +4,9 @@
 
 Invoice generator for Google Chrome and Microsoft Edge.
 
-[![Screen shot 01][screenshot-01-url]][web-store-url]
-[![Screen shot 02][screenshot-02-url]][web-store-url]
+[![Screenshot 01][screenshot-01-url]][web-store-url]
+[![Screenshot 02][screenshot-02-url]][web-store-url]
+[![Screenshot 03][screenshot-03-url]][web-store-url]
 
 ## Installation
 
@@ -45,13 +46,14 @@ yarn dev
 - [x] Export/import options
 - [x] CI/CD
 - [ ] Tests
-- [ ] Multiple services
+- [x] Multiple services
 - [ ] Invoice reminder
 - [ ] Invoice expression
 
 [web-store-url]: https://chrome.google.com/webstore/detail/invoice-generator/obdabdocagpfclncklefebhhgggkbbnk 'Invoice generator Web Store'
-[screenshot-01-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screen-shot-1.png 'Invoice generator'
-[screenshot-02-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screen-shot-2.png 'Invoice generator options'
+[screenshot-01-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screenshot-01.png 'Invoice generator'
+[screenshot-02-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screenshot-02.png 'Invoice generator items'
+[screenshot-03-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screenshot-03.png 'Invoice generator options'
 [invoice-generator-logo-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/logo.png 'Invoice generator logo'
 [bootstrap-url]: https://github.com/twbs/bootstrap 'Bootstrap repository'
 [jspdf-url]: https://github.com/parallax/jsPDF 'jsPDF repository'

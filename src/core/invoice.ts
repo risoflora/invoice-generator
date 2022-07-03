@@ -23,7 +23,7 @@ interface Beneficiary {
 
 interface Service {
   description?: string;
-  value?: string;
+  value?: number;
 }
 
 interface Configuration {
@@ -33,13 +33,13 @@ interface Configuration {
 }
 
 interface Invoice {
-  supplier: Supplier;
-  customer: Customer;
-  intermediaryBank: IntermediaryBank;
-  bank: Bank;
-  beneficiary: Beneficiary;
-  service: Service;
-  configuration: Configuration;
+  supplier?: Supplier;
+  customer?: Customer;
+  intermediaryBank?: IntermediaryBank;
+  bank?: Bank;
+  beneficiary?: Beneficiary;
+  services?: Service[];
+  configuration?: Configuration;
 }
 
 export type { Supplier, Customer, IntermediaryBank, Bank, Beneficiary, Service, Invoice };

@@ -1,179 +1,74 @@
 import { useState } from 'react';
+import { deepmerge as merge } from 'deepmerge-ts';
 
-import { description as pkgDescription, version as pkgVersion } from '../../package.json';
+import { description as pkgDescription } from '../../package.json';
 
 import { useIsFirstRender } from '../hooks/useIsFirstRender';
-import { DEFAULT_DATE_FORMAT, asDataURL } from '../core/utils';
+import { DEFAULT_DATE_FORMAT, DEFAULT_LOCALE, DEFAULT_CURRENCY, asDataURL, scrollToElement } from '../core/utils';
 import { load, save } from '../core/storage';
-import { Invoice } from '../core/invoice';
+import { Invoice, Service } from '../core/invoice';
 
 import Container from '../components/Container';
+import Nav from '../components/Nav';
+import ButtonGroup from '../components/ButtonGroup';
+import Button from '../components/Button';
+import File from '../components/File';
+import Link from '../components/Link';
 import Row from '../components/Row';
 import Col from '../components/Col';
 import Input from '../components/Input';
 import TextArea from '../components/TextArea';
-import ButtonGroup from '../components/ButtonGroup';
-import File from '../components/File';
-import Link from '../components/Link';
-import Button from '../components/Button';
-import Nav from '../components/Nav';
+import Status from '../components/Status';
 
 import logo from '../favicon.svg';
 
 const Options = () => {
-  const [supplierDescription, setSupplierDescription] = useState<string>();
-  const [supplierAddress, setSupplierAddress] = useState<string>();
-  const [customerDescription, setCustomerDescription] = useState<string>();
-  const [customerAddress, setCustomerAddress] = useState<string>();
-  const [intermediaryBankInfo, setIntermediaryBankInfo] = useState<string>();
-  const [bankInfo, setBankInfo] = useState<string>();
-  const [beneficiaryName, setBeneficiaryName] = useState<string>();
-  const [beneficiaryIBAN, setBeneficiaryIBAN] = useState<string>();
-  const [serviceDescription, setServiceDescription] = useState<string>();
-  const [serviceValue, setServiceValue] = useState<string>();
-  const [configurationDateFormat, setConfigurationDateFormat] = useState<string>();
-  const [configurationLocale, setConfigurationLocale] = useState<string>();
-  const [configurationCurrency, setConfigurationCurrency] = useState<string>();
-  const [exportUrl, setExportUrl] = useState<string>();
+  const [invoice, setInvoice] = useState<Invoice>();
+  const [exportUrl, setExportUrl] = useState('');
   const [isSaved, setIsSaved] = useState(true);
   const isFirstRender = useIsFirstRender();
 
-  const createInvoice = (): Invoice => ({
-    supplier: {
-      description: supplierDescription,
-      address: supplierAddress
-    },
-    customer: {
-      description: customerDescription,
-      address: customerAddress
-    },
-    intermediaryBank: {
-      info: intermediaryBankInfo
-    },
-    bank: {
-      info: bankInfo
-    },
-    beneficiary: {
-      name: beneficiaryName,
-      iban: beneficiaryIBAN
-    },
-    service: {
-      description: serviceDescription,
-      value: serviceValue
-    },
-    configuration: {
-      dateFormat: configurationDateFormat,
-      locale: configurationLocale,
-      currency: configurationCurrency
+  const updateInvoice = (argument: Invoice | Function) => {
+    const isFunction = typeof argument === 'function';
+    if (isFunction) {
+      argument();
     }
-  });
-
-  const loadInvoice = (invoice: Invoice) => {
-    const { supplier, customer, intermediaryBank, bank, beneficiary, service, configuration } = invoice;
-
-    setSupplierDescription(supplier?.description || '');
-    setSupplierAddress(supplier?.address || '');
-
-    setCustomerDescription(customer?.description || '');
-    setCustomerAddress(customer?.address || '');
-
-    setIntermediaryBankInfo(intermediaryBank?.info || '');
-    setBankInfo(bank?.info || '');
-
-    setBeneficiaryName(beneficiary?.name || '');
-    setBeneficiaryIBAN(beneficiary?.iban || '');
-
-    setServiceDescription(service?.description || '');
-    setServiceValue(service?.value || '');
-
-    setConfigurationDateFormat(configuration?.dateFormat || '');
-    setConfigurationLocale(configuration?.locale || '');
-    setConfigurationCurrency(configuration?.currency || '');
-  };
-
-  const handleSupplierDescription = (value: string) => {
-    setSupplierDescription(value);
+    setInvoice(merge(invoice, isFunction ? {} : argument));
     setIsSaved(false);
   };
 
-  const handleSupplierAddress = (value: string) => {
-    setSupplierAddress(value);
-    setIsSaved(false);
-  };
-
-  const handleCustomerDescription = (value: string) => {
-    setCustomerDescription(value);
-    setIsSaved(false);
-  };
-
-  const handleCustomerAddress = (value: string) => {
-    setCustomerAddress(value);
-    setIsSaved(false);
-  };
-
-  const handleIntermediaryBankInfo = (value: string) => {
-    setIntermediaryBankInfo(value);
-    setIsSaved(false);
-  };
-
-  const handleBankInfo = (value: string) => {
-    setBankInfo(value);
-    setIsSaved(false);
-  };
-
-  const handleBeneficiaryName = (value: string) => {
-    setBeneficiaryName(value);
-    setIsSaved(false);
-  };
-
-  const handleBeneficiaryIBAN = (value: string) => {
-    setBeneficiaryIBAN(value);
-    setIsSaved(false);
-  };
-
-  const handleServiceDescription = (value: string) => {
-    setServiceDescription(value);
-    setIsSaved(false);
-  };
-
-  const handleServiceValue = (value: string) => {
-    setServiceValue(value);
-    setIsSaved(false);
-  };
-
-  const handleConfigurationDateFormat = (value: string) => {
-    setConfigurationDateFormat(value);
-    setIsSaved(false);
-  };
-
-  const handleConfigurationLocale = (value: string) => {
-    setConfigurationLocale(value);
-    setIsSaved(false);
-  };
-
-  const handleConfigurationCurrency = (value: string) => {
-    setConfigurationCurrency(value);
-    setIsSaved(false);
-  };
-
-  const handleImport = (content: string | undefined) => {
+  const handleImport = (content?: string) => {
     try {
-      loadInvoice(JSON.parse(content || '{}'));
+      setInvoice(JSON.parse(content || '{}'));
       setIsSaved(false);
     } catch {}
   };
 
+  const isValidService = (service?: Service) => service && service?.description && service?.value;
+
   const handleSave = async () => {
-    const invoice = createInvoice();
-    setExportUrl(await asDataURL(invoice));
-    await save<Invoice>(invoice);
+    const savedInvoice = { ...invoice, services: invoice?.services?.filter((service) => isValidService(service)) };
+    setInvoice(savedInvoice);
+    setExportUrl(await asDataURL(savedInvoice));
+    await save<Invoice>(savedInvoice || {});
     setIsSaved(true);
   };
 
+  const hasServices = (services?: Service[]) => services && services?.length > 0;
+
+  const canAddService = (services?: Service[]) => !hasServices(invoice?.services) || isValidService(services?.at(-1));
+
+  const handleAddService = (service: Service) => {
+    if (canAddService(invoice?.services)) {
+      updateInvoice({ services: [service] });
+      scrollToElement('last-service-description');
+    }
+  };
+
   const handleLoad = async () => {
-    const invoice = await load<Invoice>();
-    setExportUrl(await asDataURL(invoice));
-    loadInvoice(invoice);
+    const loadedInvoice = await load<Invoice>();
+    setInvoice(loadedInvoice);
+    setExportUrl(await asDataURL(loadedInvoice));
   };
 
   if (isFirstRender) {
@@ -182,7 +77,7 @@ const Options = () => {
 
   return (
     <Container style={{ maxWidth: '48rem' }}>
-      <Nav logo={logo} title={`${pkgDescription} v${pkgVersion}`}>
+      <Nav logo={logo} title={`Options · ${pkgDescription}`}>
         <ButtonGroup className="flex-grow-1">
           <File icon="box-arrow-in-down" accept=".json,application/json" fullWidth onFileChange={handleImport}>
             Import
@@ -201,8 +96,8 @@ const Options = () => {
           <Input
             maxLength={200}
             placeholder="Description"
-            value={supplierDescription}
-            onChange={({ target }) => handleSupplierDescription(target.value)}
+            value={invoice?.supplier?.description}
+            onChange={({ target }) => updateInvoice({ supplier: { description: target.value } })}
           />
         </Col>
         <Col size={12}>
@@ -210,8 +105,8 @@ const Options = () => {
             maxLength={1000}
             rows={3}
             placeholder="Address"
-            value={supplierAddress}
-            onChange={({ target }) => handleSupplierAddress(target.value)}
+            value={invoice?.supplier?.address}
+            onChange={({ target }) => updateInvoice({ supplier: { address: target.value } })}
           />
         </Col>
       </Row>
@@ -221,8 +116,8 @@ const Options = () => {
           <Input
             maxLength={200}
             placeholder="Description"
-            value={customerDescription}
-            onChange={({ target }) => handleCustomerDescription(target.value)}
+            value={invoice?.customer?.description}
+            onChange={({ target }) => updateInvoice({ customer: { description: target.value } })}
           />
         </Col>
         <Col size={12}>
@@ -230,8 +125,8 @@ const Options = () => {
             maxLength={1000}
             rows={3}
             placeholder="Address"
-            value={customerAddress}
-            onChange={({ target }) => handleCustomerAddress(target.value)}
+            value={invoice?.customer?.address}
+            onChange={({ target }) => updateInvoice({ customer: { address: target.value } })}
           />
         </Col>
       </Row>
@@ -242,8 +137,8 @@ const Options = () => {
             maxLength={1000}
             rows={3}
             placeholder="Info"
-            value={intermediaryBankInfo}
-            onChange={({ target }) => handleIntermediaryBankInfo(target.value)}
+            value={invoice?.intermediaryBank?.info}
+            onChange={({ target }) => updateInvoice({ intermediaryBank: { info: target.value } })}
           />
         </Col>
       </Row>
@@ -254,8 +149,8 @@ const Options = () => {
             maxLength={1000}
             rows={3}
             placeholder="Info"
-            value={bankInfo}
-            onChange={({ target }) => handleBankInfo(target.value)}
+            value={invoice?.bank?.info}
+            onChange={({ target }) => updateInvoice({ bank: { info: target.value } })}
           />
         </Col>
       </Row>
@@ -265,65 +160,95 @@ const Options = () => {
           <Input
             maxLength={200}
             placeholder="Name"
-            value={beneficiaryName}
-            onChange={({ target }) => handleBeneficiaryName(target.value)}
+            value={invoice?.beneficiary?.name}
+            onChange={({ target }) => updateInvoice({ beneficiary: { name: target.value } })}
           />
         </Col>
         <Col size={5}>
           <Input
             maxLength={50}
             placeholder="IBAN"
-            value={beneficiaryIBAN}
-            onChange={({ target }) => handleBeneficiaryIBAN(target.value)}
+            value={invoice?.beneficiary?.iban}
+            onChange={({ target }) => updateInvoice({ beneficiary: { iban: target.value } })}
           />
         </Col>
       </Row>
 
-      <Row title="Service" icon="check-circle">
-        <Col size={9}>
-          <Input
-            maxLength={200}
-            placeholder="Description"
-            value={serviceDescription}
-            onChange={({ target }) => handleServiceDescription(target.value)}
-          />
-        </Col>
-        <Col size={2} className="flex-fill">
-          <Input
-            type="number"
-            min={0}
-            max={999999}
-            maxLength={10}
-            placeholder="Value"
-            value={serviceValue}
-            onChange={({ target }) => handleServiceValue(target.value)}
-          />
-        </Col>
+      <Row
+        title="Services"
+        icon="check-circle"
+        extra={
+          <Button icon="plus-circle" disabled={!canAddService(invoice?.services)} onClick={() => handleAddService({})}>
+            Add service
+          </Button>
+        }
+      >
+        {hasServices(invoice?.services) ? (
+          invoice?.services?.map((service, index, services) => (
+            <>
+              <Col size={9}>
+                <Input
+                  id={index === services.length - 1 ? 'last-service-description' : undefined}
+                  maxLength={200}
+                  placeholder="Description"
+                  value={service?.description}
+                  onChange={({ target }) =>
+                    updateInvoice(() => (services[index] = { ...service, description: target.value }))
+                  }
+                />
+              </Col>
+              <Col size={2} className="flex-fill">
+                <Input
+                  type="number"
+                  min={0}
+                  max={999999}
+                  maxLength={10}
+                  placeholder="Value"
+                  value={service?.value}
+                  onChange={({ target }) =>
+                    updateInvoice(() => (services[index] = { ...service, value: +target.value }))
+                  }
+                />
+              </Col>
+              <Col>
+                <Button
+                  icon="trash"
+                  className="btn-danger"
+                  onClick={() => updateInvoice(() => services.splice(index, 1))}
+                />
+              </Col>
+            </>
+          ))
+        ) : (
+          <Col>
+            <Status className="text-secondary text-center" text="No services added" isInput />
+          </Col>
+        )}
       </Row>
 
       <Row title="Configuration" icon="gear">
         <Col size={4}>
           <Input
             maxLength={10}
-            placeholder={configurationDateFormat || DEFAULT_DATE_FORMAT}
-            value={configurationDateFormat}
-            onChange={({ target }) => handleConfigurationDateFormat(target.value)}
+            placeholder={invoice?.configuration?.dateFormat || DEFAULT_DATE_FORMAT}
+            value={invoice?.configuration?.dateFormat}
+            onChange={({ target }) => updateInvoice({ configuration: { dateFormat: target.value } })}
           />
         </Col>
         <Col size={4}>
           <Input
             maxLength={5}
-            placeholder="en-US"
-            value={configurationLocale}
-            onChange={({ target }) => handleConfigurationLocale(target.value)}
+            placeholder={invoice?.configuration?.locale || DEFAULT_LOCALE}
+            value={invoice?.configuration?.locale}
+            onChange={({ target }) => updateInvoice({ configuration: { locale: target.value } })}
           />
         </Col>
         <Col size={4}>
           <Input
             maxLength={3}
-            placeholder="USD"
-            value={configurationCurrency}
-            onChange={({ target }) => handleConfigurationCurrency(target.value)}
+            placeholder={invoice?.configuration?.currency || DEFAULT_CURRENCY}
+            value={invoice?.configuration?.currency}
+            onChange={({ target }) => updateInvoice({ configuration: { currency: target.value } })}
           />
         </Col>
       </Row>

@@ -15,6 +15,7 @@ const Button: FunctionComponent<Props & JSX.IntrinsicElements['button']> = ({
   ...props
 }) => {
   const alt = typeof children === 'string' ? (children as string) : undefined;
+
   return (
     <button
       type="button"

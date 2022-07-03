@@ -18,6 +18,7 @@ const File: FunctionComponent<Props & JSX.IntrinsicElements['input']> = ({
   ...props
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   return (
     <>
       <input

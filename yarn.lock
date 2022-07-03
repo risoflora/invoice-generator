@@ -643,6 +643,11 @@ debug@^4.1.0:
   dependencies:
     ms "2.1.2"
 
+deepmerge-ts@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/deepmerge-ts/-/deepmerge-ts-4.2.1.tgz#104fe27c91abde4597bad1dcfd00a7a8be22d532"
+  integrity sha512-xzJLiUo4z1dD2nggSfaMvHo5qWLoy/JVa9rKuktC6FrQQEBI8Qnj7KwuCYZhqBoGOOpGqs6+3MR2ZhSMcTr4BA==
+
 dir-glob@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/dir-glob/-/dir-glob-3.0.1.tgz#56dbf73d992a4a93ba1584f4534063fd2e41717f"

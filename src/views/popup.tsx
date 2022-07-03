@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { description as pkgDescription, version as pkgVersion } from '../../package.json';
 
-import { useIsFirstRender } from '../hooks/useIsFirstRender';
-import { DEFAULT_DATE_FORMAT, daysBetween, isSameDate } from '../core/utils';
+import { DEFAULT_DATE_FORMAT, daysBetween, isSameDate, formatMoney, totalize } from '../core/utils';
 import { load } from '../core/storage';
 import { Invoice } from '../core/invoice';
 import { Report, ReportOptions } from '../core/report';
@@ -11,36 +10,29 @@ import { Report, ReportOptions } from '../core/report';
 import Container from '../components/Container';
 import Hero from '../components/Hero';
 import Row from '../components/Row';
+import Accordion from '../components/Accordion';
+import AccordionItem from '../components/AccordionItem';
 import Col from '../components/Col';
 import DatePicker from '../components/DatePicker';
 import Status from '../components/Status';
-import Input from '../components/Input';
 import ButtonGroup from '../components/ButtonGroup';
 import Button from '../components/Button';
+import List from '../components/List';
+import ListItem from '../components/ListItem';
 import RateUs from '../components/RateUs';
 
 import logo from '../favicon.svg';
 
 const Popup = () => {
+  const [invoice, setInvoice] = useState<Invoice>({});
   const [referenceMonth, setReferenceMonth] = useState(new Date());
   const [dueOn, setDueOn] = useState<Date>();
-  const [remainingDays, setRemainingDays] = useState<string>();
-  const [serviceDescription, setServiceDescription] = useState<string>();
-  const [serviceValue, setServiceValue] = useState<string>();
-  const [configurationDateFormat, setConfigurationDateFormat] = useState<string>();
-  const isFirstRender = useIsFirstRender();
+  const [remainingDaysStatus, setRemainingDaysStatus] = useState<string>();
 
   const hasDates = () => referenceMonth && dueOn;
 
-  const generate = async (options: ReportOptions) => {
-    const invoice = await load<Invoice>();
-    chrome.downloads.download(
-      await new Report({
-        ...invoice,
-        service: { ...invoice.service, description: serviceDescription, value: serviceValue }
-      }).generate(options)
-    );
-  };
+  const generate = async (options: ReportOptions) =>
+    chrome.downloads.download(await new Report(invoice).generate(options));
 
   const handleReferenceMonth = (date: Date) => {
     setReferenceMonth(date);
@@ -49,25 +41,22 @@ const Popup = () => {
 
   const handleDueOn = (date: Date) => setDueOn(date);
 
-  const handleSettings = () => chrome.runtime.openOptionsPage();
+  const handleOptions = () => chrome.runtime.openOptionsPage();
 
   const handleGenerate = () => generate({ referenceMonth, dueOn });
 
   useEffect(() => {
     if (hasDates() && !isSameDate(dueOn!, referenceMonth)) {
       const days = daysBetween(referenceMonth, dueOn!);
-      setRemainingDays(days > 0 ? `Is due on ${days} day${days > 1 ? 's' : ''}` : '');
+      setRemainingDaysStatus(days > 0 ? `Is due on ${days} day${days > 1 ? 's' : ''}` : '');
     } else {
-      setRemainingDays('');
-    }
-    if (isFirstRender) {
-      load<Invoice>().then(({ service, configuration }) => {
-        setServiceDescription(service?.description);
-        setServiceValue(service?.value);
-        setConfigurationDateFormat(configuration?.dateFormat || DEFAULT_DATE_FORMAT);
-      });
+      setRemainingDaysStatus('');
     }
   }, [referenceMonth, dueOn]);
+
+  useEffect(() => {
+    (async () => setInvoice(await load<Invoice>()))();
+  }, [load]);
 
   return (
     <Container style={{ width: '18rem' }}>
@@ -79,8 +68,8 @@ const Popup = () => {
           <DatePicker
             selected={referenceMonth}
             minDate={new Date()}
-            dateFormat={configurationDateFormat}
-            placeholder={configurationDateFormat}
+            dateFormat={invoice.configuration?.dateFormat}
+            placeholder={invoice.configuration?.dateFormat || DEFAULT_DATE_FORMAT}
             required
             onChange={handleReferenceMonth}
           />
@@ -90,40 +79,54 @@ const Popup = () => {
             selected={dueOn}
             minDate={referenceMonth}
             disabled={!referenceMonth}
-            dateFormat={configurationDateFormat}
-            placeholder={configurationDateFormat}
+            dateFormat={invoice.configuration?.dateFormat}
+            placeholder={invoice.configuration?.dateFormat || DEFAULT_DATE_FORMAT}
             required
             onChange={handleDueOn}
           />
         </Col>
-        <Status text={remainingDays} />
+        <Status text={remainingDaysStatus} />
       </Row>
 
-      <Row title="Service" icon="check-circle">
-        <Col size={8}>
-          <Input
-            maxLength={200}
-            placeholder="Description"
-            value={serviceDescription}
-            onChange={({ target }) => setServiceDescription(target.value)}
-          />
-        </Col>
-        <Col size={4}>
-          <Input
-            type="number"
-            min={0}
-            max={999999}
-            maxLength={10}
-            placeholder="Value"
-            value={serviceValue}
-            onChange={({ target }) => setServiceValue(target.value)}
-          />
-        </Col>
+      <Row title="Services" icon="check-circle">
+        <Accordion id="accordion-service">
+          <AccordionItem
+            ownerSelector="#accordion-service"
+            title="Items"
+            titleClassName="px-2 py-1"
+            bodyClassName="px-1 py-2"
+          >
+            <List className="rounded" style={{ maxHeight: '15rem', overflowY: 'scroll' }}>
+              {invoice?.services?.map((service) => (
+                <ListItem className="d-flex justify-content-between p-0" title={service?.description}>
+                  <small className="fw-bold text-success ms-1">
+                    {formatMoney(service?.value || 0, '', invoice?.configuration?.locale)}
+                  </small>
+                </ListItem>
+              ))}
+            </List>
+          </AccordionItem>
+          <AccordionItem
+            ownerSelector="#accordion-service"
+            title="Total"
+            titleClassName="px-2 py-1"
+            bodyClassName="px-2 py-1"
+            expanded
+          >
+            <div className="fw-bold text-success text-end">
+              {formatMoney(
+                totalize(invoice?.services, 'value'),
+                invoice?.configuration?.currency,
+                invoice?.configuration?.locale
+              )}
+            </div>
+          </AccordionItem>
+        </Accordion>
       </Row>
 
       <ButtonGroup>
-        <Button icon="gear" fullWidth onClick={handleSettings}>
-          Settings
+        <Button icon="gear" fullWidth onClick={handleOptions}>
+          Options
         </Button>
         <Button icon="filetype-pdf" fullWidth onClick={handleGenerate}>
           Generate
