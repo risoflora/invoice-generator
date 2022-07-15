@@ -11,6 +11,11 @@ export interface DocumentOptions {
   align?: string;
 }
 
+export interface DocumentLineOptions {
+  dotted?: boolean;
+  width?: number;
+}
+
 export type DocumentTextOptions = TextOptionsLight;
 
 class Document {
@@ -41,6 +46,25 @@ class Document {
     } else {
       this.#y += lineHeight;
     }
+  }
+
+  #writeDottedLine(xFrom: number, yFrom: number, xTo: number, yTo: number, segmentLength: number = 1) {
+    const a = Math.abs(xTo - xFrom);
+    const b = Math.abs(yTo - yFrom);
+    const c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+    const fractions = c / segmentLength;
+    const adjustedSegmentLength =
+      Math.floor(fractions) % 2 === 0 ? c / Math.ceil(fractions) : c / Math.floor(fractions);
+    const deltaX = adjustedSegmentLength * (a / c);
+    const deltaY = adjustedSegmentLength * (b / c);
+    let curX = xFrom;
+    let curY = yFrom;
+    while (curX <= xTo && curY <= yTo) {
+      this.#pdf.line(curX, curY, curX + deltaX, curY + deltaY);
+      curX += 2 * deltaX;
+      curY += 2 * deltaY;
+    }
+    return this;
   }
 
   setTitle(title: string) {
@@ -76,20 +100,36 @@ class Document {
     return { x: this.#x, y: this.#y };
   }
 
-  write(text: string | string[], options?: DocumentTextOptions) {
+  writeText(text: string | string[], options?: DocumentTextOptions) {
     this.#pdf.text(text, this.#x, this.#y, options);
     return this;
   }
 
-  writeLine(text = '', options?: DocumentOptions) {
-    this.write(text, options as TextOptionsLight);
+  breakText(text = '', options?: DocumentOptions) {
+    this.writeText(text, options as TextOptionsLight);
     this.#breakLine(text, options);
     return this;
   }
 
-  writeSeparator() {
-    this.#pdf.line(this.#x, this.#y, this.width - this.#x, this.#y);
+  writeLine(options?: DocumentLineOptions) {
+    this.#pdf.setLineWidth(options?.width || 0.200025);
+    if (options?.dotted) {
+      this.#writeDottedLine(this.#x, this.#y, this.width - this.#x, this.#y);
+    } else {
+      this.#pdf.line(this.#x, this.#y, this.width - this.#x, this.#y);
+    }
     this.#breakLine();
+    return this;
+  }
+
+  newPage() {
+    this.#pdf.addPage();
+    this.setXY(30, 30);
+    return this;
+  }
+
+  focusPage(pageNumber: number) {
+    this.#pdf.setPage(pageNumber);
     return this;
   }
 

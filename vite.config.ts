@@ -38,6 +38,7 @@ const getReleaseName = () => `dist/${process.env.npm_package_name}-v${process.en
 
 export default defineConfig({
   build: {
+    sourcemap: !isProduction(),
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: {
@@ -51,7 +52,11 @@ export default defineConfig({
             {
               src: 'manifest.json',
               dest: 'dist',
-              transform: (contents) => contents.toString().replace('$version', process.env.npm_package_version)
+              transform: (contents) =>
+                contents
+                  .toString()
+                  .replace('$version', process.env.npm_package_version)
+                  .replace(/\$name/g, process.env.npm_package_description)
             }
           ]
         })

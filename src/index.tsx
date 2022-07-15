@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import 'bootstrap/dist/js/bootstrap';
+
 import Popup from './views/popup';
 import Options from './views/options';
 

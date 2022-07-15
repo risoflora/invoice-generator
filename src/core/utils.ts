@@ -1,28 +1,38 @@
-function isSameDate(date1: Date, date2: Date) {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  );
-}
+import { format as formatFns } from 'date-fns';
 
-function daysBetween(startDate: Date, endDate: Date) {
+const DEFAULT_DATE_FORMAT = 'MM/dd/yyyy';
+
+const DEFAULT_LOCALE = 'en-US';
+
+const DEFAULT_CURRENCY = 'USD';
+
+const uuid = () => crypto.randomUUID();
+
+const isSameDate = (date1: Date, date2: Date) =>
+  date1.getFullYear() === date2.getFullYear() &&
+  date1.getMonth() === date2.getMonth() &&
+  date1.getDate() === date2.getDate();
+
+const daysBetween = (startDate: Date, endDate: Date) => {
   const diff = Math.abs(startDate.getTime() - endDate.getTime());
   return Math.ceil(diff / (1000 * 3600 * 24));
-}
+};
 
-const formatDate = (date: Date) =>
-  `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
-    .getDate()
-    .toString()
-    .padStart(2, '0')}`;
+const formatDate = (date: Date, format: string = DEFAULT_DATE_FORMAT) => formatFns(date, format);
 
-const formatMonth = (date: Date) => date.toLocaleString('en-US', { month: 'long' });
+const formatMonth = (date: Date, locale: string = DEFAULT_LOCALE) => date.toLocaleString(locale, { month: 'long' });
 
-const formatNamedDate = (date: Date) => `${formatMonth(date)} ${date.getDate()}, ${date.getFullYear()}`;
+const formatNamedDate = (date: Date, locale: string = DEFAULT_LOCALE) =>
+  `${formatMonth(date, locale)} ${date.getDate()}, ${date.getFullYear()}`;
 
-const formatMoney = (locale: string, currency: string, value: number) =>
-  `${currency || ''} ${new Intl.NumberFormat(locale, { style: 'currency', currency }).format(value || 0)}`;
+const formatMoney = (value: number | string, currency?: string, locale: string = DEFAULT_LOCALE) =>
+  `${currency ? currency + ' ' : ''}${new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency || DEFAULT_CURRENCY
+  }).format(typeof value === 'string' ? Number(value) : value)}`;
+
+const totalize = <T>(list?: Array<T>, prop?: string) =>
+  list?.reduce((previousValue, item: any) => previousValue + ((prop ? item[prop] : item) || 0), 0) || 0;
 
 const readAsDataURL = (blob: Blob) =>
   new Promise<string>((resolve, reject) => {
@@ -34,4 +44,22 @@ const readAsDataURL = (blob: Blob) =>
 
 const asDataURL = (data: any) => readAsDataURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
 
-export { isSameDate, daysBetween, formatDate, formatMonth, formatNamedDate, formatMoney, readAsDataURL, asDataURL };
+const scrollToElement = (elementId: string) =>
+  setTimeout(() => document.getElementById(elementId)?.scrollIntoView(), 0);
+
+export {
+  DEFAULT_DATE_FORMAT,
+  DEFAULT_LOCALE,
+  DEFAULT_CURRENCY,
+  uuid,
+  isSameDate,
+  daysBetween,
+  formatDate,
+  formatMonth,
+  formatNamedDate,
+  formatMoney,
+  totalize,
+  readAsDataURL,
+  asDataURL,
+  scrollToElement
+};

@@ -4,21 +4,27 @@ import Button from './Button';
 
 type Props = {
   icon?: string;
+  fullWidth?: boolean;
+  accept?: string;
   onFileChange?: (content: string | undefined) => void;
 };
 
 const File: FunctionComponent<Props & JSX.IntrinsicElements['input']> = ({
   icon,
+  fullWidth,
+  accept,
   children,
   onFileChange,
   ...props
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   return (
     <>
       <input
-        type="file"
         ref={fileInputRef}
+        type="file"
+        accept={accept}
         style={{ display: 'none' }}
         onChange={(event) => {
           const reader = new FileReader();
@@ -29,7 +35,7 @@ const File: FunctionComponent<Props & JSX.IntrinsicElements['input']> = ({
         }}
         {...props}
       />
-      <Button icon={icon} onClick={() => fileInputRef.current?.click()}>
+      <Button icon={icon} fullWidth={fullWidth} onClick={() => fileInputRef.current?.click()}>
         {children}
       </Button>
     </>

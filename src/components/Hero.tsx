@@ -13,7 +13,7 @@ const Hero: FunctionComponent<Props & JSX.IntrinsicElements['h6']> = ({
   ...props
 }) => (
   <h6
-    className={`bg-body text-success text-center bg-success bg-opacity-50 fw-bold shadow rounded-pill p-1${
+    className={`bg-body text-success text-center bg-success bg-opacity-50 shadow rounded-pill p-1${
       className ? ` ${className}` : ''
     }`}
     {...props}

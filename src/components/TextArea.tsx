@@ -6,7 +6,7 @@ const TextArea: FunctionComponent<JSX.IntrinsicElements['textarea']> = ({ classN
     placeholder={placeholder}
     aria-label={placeholder}
     {...props}
-  ></textarea>
+  />
 );
 
 export default TextArea;
