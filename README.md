@@ -51,10 +51,10 @@ yarn dev
 - [ ] Invoice expression
 
 [web-store-url]: https://chrome.google.com/webstore/detail/invoice-generator/obdabdocagpfclncklefebhhgggkbbnk 'Invoice generator Web Store'
-[screenshot-01-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screenshot-01.png 'Invoice generator'
-[screenshot-02-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screenshot-02.png 'Invoice generator items'
-[screenshot-03-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/screenshot-03.png 'Invoice generator options'
-[invoice-generator-logo-url]: https://github.com/risoflora/invoice-generator/raw/master/contrib/logo.png 'Invoice generator logo'
+[screenshot-01-url]: https://github.com/risoflora/invoice-generator/raw/main/contrib/screenshot-01.png 'Invoice generator'
+[screenshot-02-url]: https://github.com/risoflora/invoice-generator/raw/main/contrib/screenshot-02.png 'Invoice generator items'
+[screenshot-03-url]: https://github.com/risoflora/invoice-generator/raw/main/contrib/screenshot-03.png 'Invoice generator options'
+[invoice-generator-logo-url]: https://github.com/risoflora/invoice-generator/raw/main/contrib/logo.png 'Invoice generator logo'
 [bootstrap-url]: https://github.com/twbs/bootstrap 'Bootstrap repository'
 [jspdf-url]: https://github.com/parallax/jsPDF 'jsPDF repository'
 [react-datepicker-url]: https://github.com/Hacker0x01/react-datepicker 'React Datepicker repository'
