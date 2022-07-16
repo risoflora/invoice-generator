@@ -1,8 +1,9 @@
 {
   "name": "invoice-generator",
   "description": "Invoice generator",
+  "license": "MIT",
+  "version": "3.0.1",
   "private": true,
-  "version": "3.0.0",
   "scripts": {
     "dev": "tsc && vite build --watch",
     "build": "tsc && vite build"

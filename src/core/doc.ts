@@ -77,6 +77,11 @@ class Document {
     return this;
   }
 
+  setCreator(creator: string) {
+    this.#pdf.setDocumentProperties({ creator });
+    return this;
+  }
+
   setFont(options: DocumentOptions) {
     if (options) {
       this.#pdf.setFont(this.#pdf.getFont().fontName, options?.style || 'normal', options?.weight || 'normal');
