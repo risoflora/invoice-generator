@@ -5,7 +5,7 @@ const RateUs: FunctionComponent<JSX.IntrinsicElements['div']> = ({ className, ..
     <a
       className="link-dark text-decoration-none"
       href="https://chrome.google.com/webstore/detail/invoice-generator/obdabdocagpfclncklefebhhgggkbbnk/reviews"
-      target="_blank"
+      target="_blank" rel="noreferrer"
     >
       <div className="text-center">
         <span className="me-2" style={{ verticalAlign: 'text-bottom' }}>

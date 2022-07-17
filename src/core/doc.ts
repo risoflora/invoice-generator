@@ -20,9 +20,13 @@ export type DocumentTextOptions = TextOptionsLight;
 
 class Document {
   #pdf;
+
   #x!: number;
+
   #y!: number;
+
   height: number;
+
   width: number;
 
   constructor() {
@@ -33,13 +37,14 @@ class Document {
 
   #getLineHeight() {
     const lineHeightOffset = 0.3;
-    return this.#pdf.getLineHeight() / this.#pdf.internal.scaleFactor + lineHeightOffset;
+
+    return (this.#pdf.getLineHeight() / this.#pdf.internal.scaleFactor) + lineHeightOffset;
   }
 
-  #breakLine(text = '', options?: DocumentOptions) {
+  #breakLine(text?: string, options?: DocumentOptions) {
     const lineHeight = this.#getLineHeight();
     if (options?.maxWidth) {
-      const splittedText = this.#pdf.splitTextToSize(text, options.maxWidth);
+      const splittedText = this.#pdf.splitTextToSize(text || '', options.maxWidth);
       const lines = splittedText.length;
       const blockHeight = lines * lineHeight;
       this.#y += blockHeight;
@@ -48,7 +53,19 @@ class Document {
     }
   }
 
-  #writeDottedLine(xFrom: number, yFrom: number, xTo: number, yTo: number, segmentLength: number = 1) {
+  #writeDottedLine({
+    xFrom,
+    yFrom,
+    xTo,
+    yTo,
+    segmentLength = 1
+  }: {
+    xFrom: number;
+    yFrom: number;
+    xTo: number;
+    yTo: number;
+    segmentLength?: number;
+  }) {
     const a = Math.abs(xTo - xFrom);
     const b = Math.abs(yTo - yFrom);
     const c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
@@ -64,21 +81,25 @@ class Document {
       curX += 2 * deltaX;
       curY += 2 * deltaY;
     }
+
     return this;
   }
 
   setTitle(title: string) {
     this.#pdf.setDocumentProperties({ title });
+
     return this;
   }
 
   setAuthor(author: string) {
     this.#pdf.setDocumentProperties({ author });
+
     return this;
   }
 
   setCreator(creator: string) {
     this.#pdf.setDocumentProperties({ creator });
+
     return this;
   }
 
@@ -90,6 +111,7 @@ class Document {
       }
       this.#pdf.setTextColor(options?.color || 0);
     }
+
     return this;
   }
 
@@ -98,6 +120,7 @@ class Document {
     if (y) {
       this.#y = y;
     }
+
     return this;
   }
 
@@ -107,34 +130,39 @@ class Document {
 
   writeText(text: string | string[], options?: DocumentTextOptions) {
     this.#pdf.text(text, this.#x, this.#y, options);
+
     return this;
   }
 
-  breakText(text = '', options?: DocumentOptions) {
-    this.writeText(text, options as TextOptionsLight);
+  breakText(text?: string, options?: DocumentOptions) {
+    this.writeText(text || '', options as TextOptionsLight);
     this.#breakLine(text, options);
+
     return this;
   }
 
   writeLine(options?: DocumentLineOptions) {
     this.#pdf.setLineWidth(options?.width || 0.200025);
     if (options?.dotted) {
-      this.#writeDottedLine(this.#x, this.#y, this.width - this.#x, this.#y);
+      this.#writeDottedLine({ xFrom: this.#x, yFrom: this.#y, xTo: this.width - this.#x, yTo: this.#y });
     } else {
       this.#pdf.line(this.#x, this.#y, this.width - this.#x, this.#y);
     }
     this.#breakLine();
+
     return this;
   }
 
   newPage() {
     this.#pdf.addPage();
     this.setXY(30, 30);
+
     return this;
   }
 
   focusPage(pageNumber: number) {
     this.#pdf.setPage(pageNumber);
+
     return this;
   }
 

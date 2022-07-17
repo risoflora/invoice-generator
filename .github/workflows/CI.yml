@@ -1,9 +1,3 @@
-######################################################################
-# Copyright (c) 2022 Silvio Clecio (silvioprog) <silvioprog@gmail.com>
-#
-# SPDX-License-Identifier: MIT
-######################################################################
-
 name: CI/CD
 
 on: [push, pull_request]

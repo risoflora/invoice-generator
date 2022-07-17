@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { description as pkgDescription, version as pkgVersion } from '../../package.json';
 
-import { DEFAULT_DATE_FORMAT, daysBetween, isSameDate, formatMoney, totalize } from '../core/utils';
+import { DEFAULT_DATE_FORMAT, daysBetween, formatMoney, isSameDate, totalize } from '../core/utils';
 import { load } from '../core/storage';
 import { Invoice } from '../core/invoice';
 import { Report, ReportOptions } from '../core/report';
@@ -29,8 +29,6 @@ const Popup = () => {
   const [dueOn, setDueOn] = useState<Date>();
   const [remainingDaysStatus, setRemainingDaysStatus] = useState<string>();
 
-  const hasDates = () => referenceMonth && dueOn;
-
   const generate = async (options: ReportOptions) =>
     chrome.downloads.download(await new Report(invoice).generate(options));
 
@@ -46,8 +44,8 @@ const Popup = () => {
   const handleGenerate = () => generate({ referenceMonth, dueOn });
 
   useEffect(() => {
-    if (hasDates() && !isSameDate(dueOn!, referenceMonth)) {
-      const days = daysBetween(referenceMonth, dueOn!);
+    if (referenceMonth && dueOn && !isSameDate(dueOn, referenceMonth)) {
+      const days = daysBetween(referenceMonth, dueOn);
       setRemainingDaysStatus(days > 0 ? `Is due on ${days} day${days > 1 ? 's' : ''}` : '');
     } else {
       setRemainingDaysStatus('');
@@ -97,8 +95,8 @@ const Popup = () => {
             bodyClassName="px-1 py-2"
           >
             <List className="rounded" style={{ maxHeight: '15rem', overflowY: 'scroll' }}>
-              {invoice?.services?.map((service) => (
-                <ListItem className="d-flex justify-content-between p-0" title={service?.description}>
+              {invoice?.services?.map((service, index) => (
+                <ListItem key={index} className="d-flex justify-content-between p-0" title={service?.description}>
                   <small className="fw-bold text-success ms-1">
                     {formatMoney(service?.value || 0, '', invoice?.configuration?.locale)}
                   </small>
@@ -115,7 +113,7 @@ const Popup = () => {
           >
             <div className="fw-bold text-success text-end">
               {formatMoney(
-                totalize(invoice?.services, 'value'),
+                totalize((service) => service.value, invoice?.services),
                 invoice?.configuration?.currency,
                 invoice?.configuration?.locale
               )}
