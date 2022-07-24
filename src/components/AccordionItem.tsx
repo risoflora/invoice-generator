@@ -29,7 +29,7 @@ const AccordionItem: FunctionComponent<Props & JSX.IntrinsicElements['div']> = (
   const owner = window.document.querySelector(ownerSelector);
   const [isExpanded, setIsExpanded] = useState(expanded);
 
-  const isShown = () => !!elementRef?.current?.classList.contains('show');
+  const isShown = () => Boolean(elementRef?.current?.classList.contains('show'));
 
   if (owner) {
     owner.addEventListener('shown.bs.collapse', () => setIsExpanded(isShown()));

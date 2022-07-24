@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import parseArgs from 'minimist';
@@ -8,6 +9,7 @@ import zip from 'vite-plugin-auto-zip';
 
 const isProduction = () => {
   const args = parseArgs(process.argv.slice(2));
+
   return !args.watch && args._.includes('build');
 };
 
@@ -22,16 +24,18 @@ const watchedRename = (from: string, to: string) => {
 };
 
 const compress = (fileName: string) => {
-  if (isProduction()) {
-    const plugin = zip();
-    return {
-      ...plugin,
-      closeBundle() {
-        plugin.closeBundle();
-        watchedRename('dist/dist.production.zip', fileName);
-      }
-    };
+  if (!isProduction()) {
+    return undefined;
   }
+  const plugin = zip();
+
+  return {
+    ...plugin,
+    closeBundle() {
+      plugin.closeBundle();
+      watchedRename('dist/dist.production.zip', fileName);
+    }
+  };
 };
 
 const getReleaseName = () => `dist/${process.env.npm_package_name}-v${process.env.npm_package_version}.zip`;

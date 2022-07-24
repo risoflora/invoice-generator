@@ -7,8 +7,8 @@ import {
   DEFAULT_DATE_FORMAT,
   DEFAULT_LOCALE,
   formatDate,
-  formatNamedDate,
   formatMoney,
+  formatNamedDate,
   totalize,
   uuid
 } from './utils';
@@ -24,11 +24,14 @@ export interface ReportOptions {
 
 class Report {
   #doc;
+
   #invoice;
+
   #id?: string;
+
   #date!: Date;
+
   #dueOn?: Date;
-  #referenceMonth!: Date;
 
   constructor(invoice: Invoice) {
     this.#doc = new Document();
@@ -102,7 +105,6 @@ class Report {
     const locale = configuration?.locale || DEFAULT_LOCALE;
     const currency = configuration?.currency || DEFAULT_CURRENCY;
     const options = { align: 'right' };
-    const year = new Date().getFullYear();
     this.#doc.setFont({ weight: 'bold' }).breakText();
     this.#doc.breakText('SERVICES').breakText();
     this.#doc.setFont({ weight: 'normal' });
@@ -125,8 +127,8 @@ class Report {
     this.#doc.setFont({ weight: 'bold', size: 10 }).setXY(this.#doc.width - this.#doc.getXY().x);
     this.#doc.breakText(
       formatMoney(
-        totalize(this.#invoice?.services, 'value'),
-        this.#invoice?.configuration?.currency,
+        totalize((service) => service.value, this.#invoice?.services),
+        currency,
         this.#invoice?.configuration?.locale
       ),
       options
@@ -141,7 +143,7 @@ class Report {
     this.#doc
       .focusPage(1)
       .setFont({ weight: 'normal' })
-      .setXY(126, this.#doc.height / 2 - 40);
+      .setXY(126, (this.#doc.height / 2) - 40);
     this.#doc.writeText('Issued on:', options);
     this.#doc.setXY(150);
     this.#doc.breakText(formatNamedDate(this.#date, locale), options);
@@ -154,10 +156,9 @@ class Report {
     }
   }
 
-  async generate({ referenceMonth, dueOn }: ReportOptions): Promise<chrome.downloads.DownloadOptions> {
+  async generate({ dueOn }: ReportOptions): Promise<chrome.downloads.DownloadOptions> {
     this.#id = uuid();
     this.#date = new Date();
-    this.#referenceMonth = referenceMonth;
     this.#dueOn = dueOn;
 
     this.#generatePropsAndHeaderInfo();

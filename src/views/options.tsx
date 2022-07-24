@@ -3,8 +3,8 @@ import { deepmerge as merge } from 'deepmerge-ts';
 
 import { description as pkgDescription } from '../../package.json';
 
-import { useIsFirstRender } from '../hooks/useIsFirstRender';
-import { DEFAULT_DATE_FORMAT, DEFAULT_LOCALE, DEFAULT_CURRENCY, asDataURL, scrollToElement } from '../core/utils';
+import useIsFirstRender from '../hooks/useIsFirstRender';
+import { DEFAULT_CURRENCY, DEFAULT_DATE_FORMAT, DEFAULT_LOCALE, asDataURL, scrollToElement } from '../core/utils';
 import { load, save } from '../core/storage';
 import { Invoice, Service } from '../core/invoice';
 
@@ -28,7 +28,7 @@ const Options = () => {
   const [isSaved, setIsSaved] = useState(true);
   const isFirstRender = useIsFirstRender();
 
-  const updateInvoice = (argument: Invoice | Function) => {
+  const updateInvoice = (argument: Invoice | (() => void)) => {
     const isFunction = typeof argument === 'function';
     if (isFunction) {
       argument();
@@ -41,7 +41,9 @@ const Options = () => {
     try {
       setInvoice(JSON.parse(content || '{}'));
       setIsSaved(false);
-    } catch {}
+    } catch {
+      // No problem
+    }
   };
 
   const isValidService = (service?: Service) => service && service?.description && service?.value;
@@ -206,7 +208,7 @@ const Options = () => {
                   placeholder="Value"
                   value={service?.value}
                   onChange={({ target }) =>
-                    updateInvoice(() => (services[index] = { ...service, value: +target.value }))
+                    updateInvoice(() => (services[index] = { ...service, value: Number(target.value) }))
                   }
                 />
               </Col>

@@ -25,10 +25,17 @@ const DatePicker: FunctionComponent<Props & ReactDatePickerProps> = ({
     if (date.getDate() === props.selected?.getDate()) {
       return 'bg-success bg-opacity-75';
     }
+
     return '';
   };
 
-  const isLessThanToday = () => !!props.minDate && props.minDate?.getTime() > currentDate.getTime();
+  const isLessThanToday = () => {
+    if (!props.minDate) {
+      return false;
+    }
+
+    return props.minDate.getTime() > currentDate.getTime();
+  };
 
   return (
     <ReactDatePicker
