@@ -1,11 +1,10 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
+  "env": { "browser": true, "es2021": true },
   "extends": [
     "eslint:recommended",
+    "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime"
   ],
@@ -13,17 +12,15 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "ecmaFeatures": { "jsx": true },
+    "project": ["tsconfig.json"],
+    "createDefaultProgram": true
   },
   "plugins": ["import", "@typescript-eslint", "react"],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
+  "settings": { "react": { "version": "detect" } },
   "rules": {
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-floating-promises": "off",
     "import/default": "error",
     "import/no-extraneous-dependencies": "error",
     "import/prefer-default-export": "error",

@@ -37,14 +37,15 @@ class Document {
 
   #getLineHeight() {
     const lineHeightOffset = 0.3;
+    const lineHeight = this.#pdf.getLineHeight() / this.#pdf.internal.scaleFactor;
 
-    return (this.#pdf.getLineHeight() / this.#pdf.internal.scaleFactor) + lineHeightOffset;
+    return lineHeight + lineHeightOffset;
   }
 
   #breakLine(text?: string, options?: DocumentOptions) {
     const lineHeight = this.#getLineHeight();
     if (options?.maxWidth) {
-      const splittedText = this.#pdf.splitTextToSize(text || '', options.maxWidth);
+      const splittedText = this.#pdf.splitTextToSize(text || '', options.maxWidth) as { length: number };
       const lines = splittedText.length;
       const blockHeight = lines * lineHeight;
       this.#y += blockHeight;
@@ -85,25 +86,25 @@ class Document {
     return this;
   }
 
-  setTitle(title: string) {
+  setTitle(title?: string) {
     this.#pdf.setDocumentProperties({ title });
 
     return this;
   }
 
-  setAuthor(author: string) {
+  setAuthor(author?: string) {
     this.#pdf.setDocumentProperties({ author });
 
     return this;
   }
 
-  setCreator(creator: string) {
+  setCreator(creator?: string) {
     this.#pdf.setDocumentProperties({ creator });
 
     return this;
   }
 
-  setFont(options: DocumentOptions) {
+  setFont(options?: DocumentOptions) {
     if (options) {
       this.#pdf.setFont(this.#pdf.getFont().fontName, options?.style || 'normal', options?.weight || 'normal');
       if (options?.size) {
