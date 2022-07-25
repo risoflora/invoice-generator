@@ -39,7 +39,7 @@ const Options = () => {
 
   const handleImport = (content?: string) => {
     try {
-      setInvoice(JSON.parse(content || '{}'));
+      setInvoice(JSON.parse(content || '{}') as Invoice);
       setIsSaved(false);
     } catch {
       // No problem

@@ -14,7 +14,7 @@ const Link: FunctionComponent<Props & JSX.IntrinsicElements['a']> = ({
   children,
   ...props
 }) => {
-  const alt = typeof children === 'string' ? (children as string) : undefined;
+  const alt = typeof children === 'string' ? children : undefined;
 
   return (
     <a

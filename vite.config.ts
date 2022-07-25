@@ -8,9 +8,19 @@ import copy from 'rollup-plugin-copy';
 import zip from 'vite-plugin-auto-zip';
 
 const isProduction = () => {
+  /* eslint-disable
+    @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-return,
+    @typescript-eslint/no-unsafe-member-access */
   const args = parseArgs(process.argv.slice(2));
 
   return !args.watch && args._.includes('build');
+  /* eslint-enable
+    @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-return,
+    @typescript-eslint/no-unsafe-member-access */
 };
 
 const watchedRename = (from: string, to: string) => {
@@ -27,6 +37,11 @@ const compress = (fileName: string) => {
   if (!isProduction()) {
     return undefined;
   }
+  /* eslint-disable
+    @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-return,
+    @typescript-eslint/no-unsafe-member-access */
   const plugin = zip();
 
   return {
@@ -36,9 +51,15 @@ const compress = (fileName: string) => {
       watchedRename('dist/dist.production.zip', fileName);
     }
   };
+  /* eslint-enable
+    @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-return,
+    @typescript-eslint/no-unsafe-member-access */
 };
 
-const getReleaseName = () => `dist/${process.env.npm_package_name}-v${process.env.npm_package_version}.zip`;
+const getReleaseName = () =>
+  `dist/${process.env.npm_package_name || 'error'}-v${process.env.npm_package_version || 'error'}.zip`;
 
 export default defineConfig({
   build: {

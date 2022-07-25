@@ -18,13 +18,7 @@ const Hero: FunctionComponent<Props & JSX.IntrinsicElements['h6']> = ({
     }`}
     {...props}
   >
-    {logo && (
-      <img
-        className="me-2"
-        src={logo}
-        alt={text || (typeof children === 'string' ? (children as string) : undefined)}
-      />
-    )}
+    {logo && <img className="me-2" src={logo} alt={text || (typeof children === 'string' ? children : undefined)} />}
     <strong>{text || children}</strong>
   </h6>
 );
