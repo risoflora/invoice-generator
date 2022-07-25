@@ -23,9 +23,9 @@ export interface ReportOptions {
 }
 
 class Report {
-  #doc;
+  #doc: Document;
 
-  #invoice;
+  #invoice: Invoice;
 
   #id?: string;
 
