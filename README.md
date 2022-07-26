@@ -27,6 +27,7 @@ Libraries used in this project:
 To build the extension for production:
 
 ```bash
+nvm use
 yarn
 yarn build
 ```
@@ -34,7 +35,6 @@ yarn build
 and for development:
 
 ```bash
-yarn
 yarn dev
 ```
 
