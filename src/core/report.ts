@@ -138,22 +138,18 @@ class Report {
   #generateDatesInfo() {
     const { configuration } = this.#invoice;
     const locale = configuration?.locale || DEFAULT_LOCALE;
-    const options: TextOptionsLight = { align: 'right' };
+    const options: TextOptionsLight = { align: 'left' };
     const halfHeight = this.#doc.height / 2;
 
     this.#doc
       .focusPage(1)
       .setFont({ weight: 'normal' })
-      .setXY(126, halfHeight - 40);
-    this.#doc.writeText('Issued on:', options);
-    this.#doc.setXY(150);
-    this.#doc.breakText(formatNamedDate(this.#date, locale), options);
+      .setXY(110, halfHeight - 50);
+    this.#doc.breakText(`Issued on: ${formatNamedDate(this.#date, locale)}`, options);
 
     if (this.#dueOn) {
-      this.#doc.setXY(126);
-      this.#doc.writeText('Due on:', options);
-      this.#doc.setXY(150);
-      this.#doc.breakText(formatNamedDate(this.#dueOn, locale), options);
+      this.#doc.setXY(110);
+      this.#doc.breakText(`Due on: ${formatNamedDate(this.#dueOn, locale)}`, options);
     }
   }
 
