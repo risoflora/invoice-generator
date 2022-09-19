@@ -38,19 +38,6 @@ and for development:
 yarn dev
 ```
 
-## Wish list
-
-- [x] Vite support
-- [x] Migration to React
-- [x] Service/value customization per invoice
-- [x] Export/import options
-- [x] CI/CD
-- [ ] Tests
-- [x] Multiple services
-- [ ] Invoice reminder
-- [ ] Invoice expression
-- [ ] Dark theme (optional)
-
 [web-store-url]: https://chrome.google.com/webstore/detail/invoice-generator/obdabdocagpfclncklefebhhgggkbbnk 'Invoice generator Web Store'
 [screenshot-01-url]: https://github.com/risoflora/invoice-generator/raw/main/contrib/screenshot-01.png 'Invoice generator'
 [screenshot-02-url]: https://github.com/risoflora/invoice-generator/raw/main/contrib/screenshot-02.png 'Invoice generator items'
