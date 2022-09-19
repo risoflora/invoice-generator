@@ -2,7 +2,7 @@
   "name": "invoice-generator",
   "description": "Invoice generator",
   "license": "MIT",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "private": true,
   "scripts": {
     "dev": "tsc && vite build --watch",
