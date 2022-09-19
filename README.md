@@ -49,6 +49,7 @@ yarn dev
 - [x] Multiple services
 - [ ] Invoice reminder
 - [ ] Invoice expression
+- [ ] Dark theme (optional)
 
 [web-store-url]: https://chrome.google.com/webstore/detail/invoice-generator/obdabdocagpfclncklefebhhgggkbbnk 'Invoice generator Web Store'
 [screenshot-01-url]: https://github.com/risoflora/invoice-generator/raw/main/contrib/screenshot-01.png 'Invoice generator'
