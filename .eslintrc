@@ -18,6 +18,17 @@
   },
   "plugins": ["import", "@typescript-eslint", "react"],
   "settings": { "react": { "version": "detect" } },
+  "overrides": [
+    {
+      "files": ["release.config.js", "commitlint.config.js"],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "no-template-curly-in-string": "off"
+      }
+    }
+  ],
   "rules": {
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-floating-promises": "off",
