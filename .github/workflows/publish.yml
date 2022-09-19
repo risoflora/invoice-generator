@@ -20,6 +20,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
@@ -29,6 +36,7 @@ jobs:
           description: Build from ${{ github.sha }} because of ${{ github.event_name }} by ${{ github.actor }}
 
       - name: Install Dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --silent --non-interactive
 
       - name: Semantic Release
