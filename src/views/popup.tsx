@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { description as pkgDescription, version as pkgVersion } from '../../package.json';
+import { description as pkgDescription } from '../../package.json';
 
 import { DEFAULT_DATE_FORMAT, daysBetween, formatMoney, isSameDate, totalize } from '../core/utils';
 import { load } from '../core/storage';
@@ -22,6 +22,8 @@ import ListItem from '../components/ListItem';
 import RateUs from '../components/RateUs';
 
 import logo from '../favicon.svg';
+
+const version = process.env.VERSION;
 
 const Popup = () => {
   const [invoice, setInvoice] = useState<Invoice>({});
@@ -59,7 +61,7 @@ const Popup = () => {
   return (
     <Container style={{ width: '18rem' }}>
       <Hero logo={logo}>
-        {pkgDescription} v{pkgVersion}
+        {pkgDescription} v{version}
       </Hero>
       <Row title="Reference / Due on" icon="calendar-range">
         <Col>
