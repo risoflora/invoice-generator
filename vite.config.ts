@@ -58,8 +58,11 @@ const compress = (fileName: string) => {
     @typescript-eslint/no-unsafe-member-access */
 };
 
-const getReleaseName = () =>
-  `dist/${process.env.npm_package_name || 'error'}-v${process.env.npm_package_version || 'error'}.zip`;
+const getReleaseName = () => {
+  const version = process.env.VERSION;
+
+  return `dist/${process.env.npm_package_name || 'error'}-v${version || 'error'}.zip`;
+};
 
 export default defineConfig({
   build: {
@@ -80,7 +83,7 @@ export default defineConfig({
               transform: (contents) =>
                 contents
                   .toString()
-                  .replace('$version', process.env.npm_package_version)
+                  .replace('$version', process.env.VERSION)
                   .replace(/\$name/g, process.env.npm_package_description)
             }
           ]
