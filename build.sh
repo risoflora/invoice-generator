@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export VERSION=$1
+export VITE_APP_VERSION=$1
 
 yarn run build
 
-zip -q -r invoice-generator-v"$VERSION".zip dist/
+zip -q -r invoice-generator-v"$VITE_APP_VERSION".zip dist/

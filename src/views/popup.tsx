@@ -23,7 +23,7 @@ import RateUs from '../components/RateUs';
 
 import logo from '../favicon.svg';
 
-const version = process.env.VERSION;
+const version = import.meta.env.VITE_APP_VERSION;
 
 const Popup = () => {
   const [invoice, setInvoice] = useState<Invoice>({});
