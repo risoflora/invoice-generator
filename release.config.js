@@ -15,7 +15,7 @@ module.exports = {
         assets: [
           {
             path: './invoice-generator-v${nextRelease.version}.zip',
-            label: 'Distribution files.zip'
+            label: 'Distribution Files.zip'
           }
         ]
       }
