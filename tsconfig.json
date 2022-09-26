@@ -19,11 +19,13 @@
       "react",
       "node",
       "react-dom",
+      "vitest/importMeta",
       "vite/client",
+      "vitest/globals",
       "chrome"
     ],
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
-  "include": ["src"],
+  "include": ["src", "src/setupTests.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

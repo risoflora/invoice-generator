@@ -37,7 +37,7 @@ const AccordionItem: FunctionComponent<Props & JSX.IntrinsicElements['div']> = (
   }
 
   return (
-    <div className={`accordion-item${className ? ` ${className}` : ''}`} {...props}>
+    <div data-testid="accordion-item" className={`accordion-item${className ? ` ${className}` : ''}`} {...props}>
       <h2 className="accordion-header" id={headingTag}>
         <button
           className={`accordion-button${isExpanded ? '' : ' collapsed'}${titleClassName ? ` ${titleClassName}` : ''}`}

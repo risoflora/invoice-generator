@@ -27,6 +27,17 @@
       "rules": {
         "no-template-curly-in-string": "off"
       }
+    },
+    {
+      "extends": ["plugin:vitest-globals/recommended", "plugin:jest-dom/recommended"],
+      "files": ["src/**/*.test.ts", "src/**/*.test.tsx"],
+      "env": {
+        "node": true,
+        "vitest-globals/env": true
+      },
+      "rules": {
+        "@typescript-eslint/no-unsafe-call": "off"
+      }
     }
   ],
   "rules": {

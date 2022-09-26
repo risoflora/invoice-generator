@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 
 type Props = {
-  text?: string;
+  text: string;
   logo?: string;
 };
 
@@ -19,7 +19,8 @@ const Hero: FunctionComponent<Props & JSX.IntrinsicElements['h6']> = ({
     {...props}
   >
     {logo && <img className="me-2" src={logo} alt={text || (typeof children === 'string' ? children : undefined)} />}
-    <strong>{text || children}</strong>
+    <strong>{text}</strong>
+    {children}
   </h6>
 );
 
