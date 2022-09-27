@@ -1,4 +1,9 @@
-version: 2
+version: "2"
+exclude_patterns:
+  - "**/node_modules/"
+  - "coverage/**/*"
+  - "dist/**/*"
+  - ".idea/**/*"
 plugins:
   markdownlint:
     enabled: true
@@ -6,11 +11,8 @@ plugins:
     enabled: true
   nodesecurity:
     enabled: true
-  tslint:
-    enabled: true
   editorconfig:
     enabled: true
-    channel: beta
     config:
       editorconfig: .editorconfig
   fixme:
