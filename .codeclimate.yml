@@ -1,0 +1,21 @@
+version: 2
+plugins:
+  markdownlint:
+    enabled: true
+  shellcheck:
+    enabled: true
+  nodesecurity:
+    enabled: true
+  tslint:
+    enabled: true
+  editorconfig:
+    enabled: true
+    channel: beta
+    config:
+      editorconfig: .editorconfig
+  fixme:
+    enabled: true
+    config:
+      strings:
+        - FIXME
+        - BUG

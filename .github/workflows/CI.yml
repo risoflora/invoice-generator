@@ -40,6 +40,7 @@ jobs:
       - name: Save Code Linting Report JSON
         run: yarn lint:report
         continue-on-error: true
+      - run: ls -la
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@v2
         with:
@@ -50,7 +51,6 @@ jobs:
         run: yarn test --run --coverage
 
       - name: 'Report Coverage'
-        if: always() # Also generate the report if tests are failing
         uses:  davelosert/vitest-coverage-report-action@v1
         with:
           vite-config-path: './vite.config.ts'
