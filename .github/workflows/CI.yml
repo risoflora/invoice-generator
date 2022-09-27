@@ -29,8 +29,11 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --silent --non-interactive
 
-      - name: Test
+      - name: Lint
         run: yarn lint
+
+      - name: Test
+        run: yarn test --run --silent --reporter default --coverage
 
       - name: Build
         run: yarn build

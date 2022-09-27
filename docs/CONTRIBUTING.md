@@ -1,6 +1,4 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![CI/CD](https://github.com/risoflora/invoice-generator/actions/workflows/CI.yml/badge.svg)](https://github.com/risoflora/invoice-generator/actions/workflows/CI.yml)
-[![Publish](https://github.com/risoflora/invoice-generator/actions/workflows/publish.yml/badge.svg)](https://github.com/risoflora/invoice-generator/actions/workflows/publish.yml)
 
 ## How to contribute
 

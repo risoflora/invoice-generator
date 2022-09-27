@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 
 import { defineConfig, loadEnv } from 'vite';
+import { configDefaults } from 'vitest/config';
 
 import react from '@vitejs/plugin-react';
 import copy from 'rollup-plugin-copy';
@@ -12,6 +13,9 @@ export default defineConfig(({ mode }) => {
   const isProduction = env.NODE_ENV === 'production';
 
   return {
+    define: {
+      'import.meta.vitest': false
+    },
     build: {
       sourcemap: !isProduction,
       chunkSizeWarningLimit: 1000,
@@ -42,6 +46,22 @@ export default defineConfig(({ mode }) => {
         APP_VERSION: JSON.stringify(env.VITE_APP_VERSION)
       }
     },
-    plugins: [react()]
+    plugins: [react()],
+    test: {
+      globals: true,
+      includeSource: ['src/**/*.ts', 'src/**/*.tsx'],
+
+      // Environment: 'jsdom',
+      environment: 'happy-dom',
+      setupFiles: 'src/setupTests.ts',
+      mockReset: true,
+      restoreMocks: true,
+      coverage: {
+        src: './src',
+        all: true,
+        reporter: ['lcov', 'text-summary', 'html'],
+        exclude: [...configDefaults.coverage.exclude, 'setupTests.ts', '**/*.d.ts']
+      }
+    }
   };
 });

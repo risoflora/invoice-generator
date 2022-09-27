@@ -3,7 +3,7 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "allowJs": false,
-    "skipLibCheck": false,
+    "skipLibCheck": true, // "skipLibCheck": true, https://github.com/chaance/vitest-dom/issues/1
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -19,11 +19,14 @@
       "react",
       "node",
       "react-dom",
+      "vitest/importMeta",
       "vite/client",
+      "vitest/globals",
       "chrome"
     ],
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
-  "include": ["src"],
+  "include": ["src/", "src/setupTests.ts"],
+  "exclude": ["dist", "node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

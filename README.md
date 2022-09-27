@@ -1,3 +1,6 @@
+[![CI/CD](https://github.com/risoflora/invoice-generator/actions/workflows/CI.yml/badge.svg)](https://github.com/risoflora/invoice-generator/actions/workflows/CI.yml)
+[![Publish](https://github.com/risoflora/invoice-generator/actions/workflows/publish.yml/badge.svg)](https://github.com/risoflora/invoice-generator/actions/workflows/publish.yml)
+
 [![Web Store][invoice-generator-logo-url]][web-store-url]
 
 > Invoice generator for Google Chrome and Microsoft Edge.

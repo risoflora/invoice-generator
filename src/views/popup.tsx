@@ -23,8 +23,6 @@ import RateUs from '../components/RateUs';
 
 import logo from '../favicon.svg';
 
-const version = import.meta.env.VITE_APP_VERSION;
-
 const Popup = () => {
   const [invoice, setInvoice] = useState<Invoice>({});
   const [referenceMonth, setReferenceMonth] = useState(new Date());
@@ -60,9 +58,7 @@ const Popup = () => {
 
   return (
     <Container style={{ width: '18rem' }}>
-      <Hero logo={logo}>
-        {pkgDescription} v{version}
-      </Hero>
+      <Hero logo={logo} text={pkgDescription} />
       <Row title="Reference / Due on" icon="calendar-range">
         <Col>
           <DatePicker
