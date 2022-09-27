@@ -48,7 +48,7 @@ jobs:
       - name: 'Report Coverage'
         uses:  davelosert/vitest-coverage-report-action@v1
         with:
-          vite-config-path: './vite.config.ts'
+          vite-config-path: vite.config.ts
 
       - name: Build
         run: yarn build
