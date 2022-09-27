@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 
 import { defineConfig, loadEnv } from 'vite';
+import { configDefaults } from 'vitest/config';
 
 import react from '@vitejs/plugin-react';
 import copy from 'rollup-plugin-copy';
@@ -59,7 +60,7 @@ export default defineConfig(({ mode }) => {
         src: './src',
         all: true,
         reporter: ['lcov', 'text-summary', 'html'],
-        exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.test.js', '**/*.test.jsx', 'setupTests.ts', '**/*.d.ts']
+        exclude: [...configDefaults.coverage.exclude, 'setupTests.ts', '**/*.d.ts']
       }
     }
   };

@@ -1,12 +1,7 @@
-// Import matchers from '@testing-library/jest-dom/matchers';
-// Import { expect } from 'vitest';
-//
-// Expect.extend(matchers);
-
-import 'vitest-dom/extend-expect';
+import { expect } from 'vitest';
 import { Crypto } from '@peculiar/webcrypto';
 import * as domMatchers from 'vitest-dom/matchers';
-import { expect } from 'vitest';
+import 'vitest-dom/extend-expect';
 import 'bootstrap/dist/js/bootstrap';
 
 import './index.scss';

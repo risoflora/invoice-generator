@@ -63,22 +63,21 @@ if (import.meta.vitest) {
     expect(isSameDate(new Date(2022, 1, 1), new Date(2022, 1, 1))).toBeTruthy();
     expect(isSameDate(new Date(2021, 1, 1), new Date(2022, 1, 1))).toBeFalsy();
   });
-  it('daysBetween', () => {
-    const twoDays = daysBetween(new Date(2021, 1, 1), new Date(2021, 1, 3));
-    expect(twoDays).toBe(2);
 
-    const tenDays = daysBetween(new Date(2021, 1, 1), new Date(2021, 1, 11));
-    expect(tenDays).toBe(10);
-
-    const betweenMonths = daysBetween(new Date(2021, 1, 1), new Date(2021, 2, 11));
-    expect(betweenMonths).toBe(38);
+  it.each([
+    [new Date(2021, 1, 1), new Date(2021, 1, 3), 2],
+    [new Date(2021, 1, 1), new Date(2021, 1, 11), 10],
+    [new Date(2021, 1, 1), new Date(2021, 2, 11), 38]
+  ])('daysBetween(%o, %o) -> %i', (a, b, expected) => {
+    const days = daysBetween(a, b);
+    expect(days).toBe(expected);
   });
-  it('formatDate', () => {
-    const formattedDateWithDefaultFormat = formatDate(new Date(2021, 1, 10));
-    expect(formattedDateWithDefaultFormat).toBe('02/10/2021');
-
-    const formattedDateWithCustomFormat = formatDate(new Date(2020, 2, 10), 'yyyy-MM-dd');
-    expect(formattedDateWithCustomFormat).toBe('2020-03-10');
+  it.each([
+    [new Date(2021, 1, 10), undefined, '02/10/2021'],
+    [new Date(2020, 2, 10), 'yyyy-MM-dd', '2020-03-10']
+  ])('formatDate(%o, %s) -> %s', (date, format, expected) => {
+    const formattedDateWithDefaultFormat = formatDate(date, format);
+    expect(formattedDateWithDefaultFormat).toBe(expected);
   });
   it('formatMonth', () => {
     const formattedMonth = formatMonth(new Date(2021, 1, 10));
