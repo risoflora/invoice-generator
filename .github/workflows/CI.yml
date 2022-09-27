@@ -33,7 +33,7 @@ jobs:
         run: yarn lint
 
       - name: Test
-        run: yarn test --run --silent --reporter json --coverage
+        run: yarn test --run --coverage
 
       - name: 'Report Coverage'
         if: always() # Also generate the report if tests are failing
