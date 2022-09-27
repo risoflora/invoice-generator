@@ -32,17 +32,12 @@ jobs:
       - name: Lint
         run: yarn lint
 
-#      - name: Test
-#        run: yarn test --run --silent --reporter json --coverage
+      - name: Test
+        run: yarn test --run --silent --reporter json --coverage
 
-      - uses: ArtiomTr/jest-coverage-report-action@v2
-        id: coverage
-        with:
-          package-manager: yarn
-          test-script: yarn test --run --coverage
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          message: ${{ steps.coverage.outputs.report }}
+      - name: 'Report Coverage'
+        if: always() # Also generate the report if tests are failing
+        uses:  davelosert/vitest-coverage-report-action@v1
 
       - uses: romeovs/lcov-reporter-action@v0.2.16
 
