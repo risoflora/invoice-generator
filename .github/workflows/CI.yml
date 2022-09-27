@@ -2,6 +2,11 @@ name: CI/CD
 
 on: [push, pull_request]
 
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,14 +37,23 @@ jobs:
       - name: Lint
         run: yarn lint
 
+      - name: Save Code Linting Report JSON
+        run: yarn lint:report
+        continue-on-error: true
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint_report.json"
+
       - name: Test
-        run: yarn test --run --silent --reporter json --coverage
+        run: yarn test --run --coverage
 
       - name: 'Report Coverage'
         if: always() # Also generate the report if tests are failing
         uses:  davelosert/vitest-coverage-report-action@v1
-
-      - uses: romeovs/lcov-reporter-action@v0.2.16
+        with:
+          vite-config-path: './vite.config.ts'
 
       - name: Build
         run: yarn build

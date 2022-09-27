@@ -59,7 +59,7 @@ export default defineConfig(({ mode }) => {
       coverage: {
         src: './src',
         all: true,
-        reporter: ['lcov', 'text-summary', 'html'],
+        reporter: ['lcov', 'json', 'json-summary', 'html'],
         exclude: [...configDefaults.coverage.exclude, 'setupTests.ts', '**/*.d.ts']
       }
     }
