@@ -1,8 +1,9 @@
+# Invoice Generator
+
 [![CI/CD](https://github.com/risoflora/invoice-generator/actions/workflows/CI.yml/badge.svg)](https://github.com/risoflora/invoice-generator/actions/workflows/CI.yml)
 [![Publish](https://github.com/risoflora/invoice-generator/actions/workflows/publish.yml/badge.svg)](https://github.com/risoflora/invoice-generator/actions/workflows/publish.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c81e18c86b256b604745/maintainability)](https://codeclimate.com/github/Ridermansb/invoice-generator/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c81e18c86b256b604745/test_coverage)](https://codeclimate.com/github/Ridermansb/invoice-generator/test_coverage)
-
 
 [![Web Store][invoice-generator-logo-url]][web-store-url]
 
@@ -17,7 +18,6 @@
 ## Installation
 
 Install this extension from **[Web Store][web-store-url]**.
-
 
 [web-store-url]: https://chrome.google.com/webstore/detail/invoice-generator/obdabdocagpfclncklefebhhgggkbbnk 'Invoice generator Web Store'
 [screenshot-01-url]: contrib/screenshot-01.png 'Invoice generator'
