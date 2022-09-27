@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "tsc && vite build --watch",
     "format": "prettier --write .",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:report": "eslint . --ext .ts,.tsx --output-file eslint_report.json --format json",
+    "lint": "eslint --ext .ts,.tsx .",
+    "lint:report": "eslint --ext .ts,.tsx --output-file eslint_report.json --format json .",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:webstorm": "vitest --watch --reporter=dot --reporter=json --outputFile=.vitest-result.json",

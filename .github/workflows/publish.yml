@@ -39,8 +39,13 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --silent --non-interactive
 
-      - name: Test
-        run: yarn test --run --silent --coverage
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: yarn test --run --coverage
+          debug: true
 
       - name: Semantic Release
         env:

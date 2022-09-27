@@ -1,1 +1,5 @@
 src/vite-env.d.ts
+eslint_report.json
+.vitest-result.json
+coverage/
+dist/

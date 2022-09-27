@@ -1,0 +1,23 @@
+version: "2"
+exclude_patterns:
+  - "**/node_modules/"
+  - "coverage/**/*"
+  - "dist/**/*"
+  - ".idea/**/*"
+plugins:
+  markdownlint:
+    enabled: true
+  shellcheck:
+    enabled: true
+  nodesecurity:
+    enabled: true
+  editorconfig:
+    enabled: true
+    config:
+      editorconfig: .editorconfig
+  fixme:
+    enabled: true
+    config:
+      strings:
+        - FIXME
+        - BUG
