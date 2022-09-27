@@ -34,16 +34,21 @@ jobs:
       - name: Lint
         run: yarn lint
 
-#      - name: Save Code Linting Report JSON
-#        run: yarn lint:report
-#        continue-on-error: true
-#      - name: Annotate Code Linting Results
-#        uses: ataylorme/eslint-annotate-action@v2
-#        with:
-#          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Save Code Linting Report JSON
+        run: yarn lint:report
+        continue-on-error: true
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@v2
+        continue-on-error: true
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Test
-        run: yarn test --run --coverage
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: yarn test --run --coverage
 
       - name: 'Report Coverage'
         uses:  davelosert/vitest-coverage-report-action@v1
