@@ -34,13 +34,13 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Save Code Linting Report JSON
-        run: yarn lint:report
-        continue-on-error: true
-      - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@v2
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+#      - name: Save Code Linting Report JSON
+#        run: yarn lint:report
+#        continue-on-error: true
+#      - name: Annotate Code Linting Results
+#        uses: ataylorme/eslint-annotate-action@v2
+#        with:
+#          repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test
         run: yarn test --run --coverage
