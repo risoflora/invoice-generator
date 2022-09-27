@@ -1,6 +1,6 @@
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+# How to contribute
 
-## How to contribute
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 1. Ensure you have [nvm][nvm] and [node][node] installed in your machine
 2. Ensure you have [yarn][yarn] installed in your machine
@@ -53,7 +53,7 @@ yarn
 yarn build
 ```
 
-> *You **don't need** to do this, all build and publishings are done automatically.*
+> *You **don't need** to do this, all build and publishing are done automatically.*
 
 
 ### Pushing changes
@@ -64,8 +64,6 @@ Create Pull Request
 > `gh pr create --fill --web`
 
 Once get approval, merge your changes
-
-
 
 <!-- links -->
 

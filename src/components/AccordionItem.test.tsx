@@ -5,9 +5,9 @@ import AccordionItem from './AccordionItem';
 import Accordion from './Accordion';
 
 describe('AccordionItem', () => {
-  test.concurrent('should render', () => {
+  test('should render', () => {
     render(
-      <AccordionItem title="Testing" ownerSelector="#ownerSelector">
+      <AccordionItem title="default rendering" ownerSelector="#ownerSelector">
         testing
       </AccordionItem>
     );
@@ -15,25 +15,21 @@ describe('AccordionItem', () => {
     expect(testingChildren).toBeInTheDocument();
   });
 
-  test.concurrent('should render with class', () => {
-    render(<AccordionItem title="Testing" ownerSelector="#ownerSelector" />);
+  test('should render with class', () => {
+    render(<AccordionItem title="rendering with class" ownerSelector="#ownerSelector" />);
     expect(screen.getByTestId('accordion-item')).toHaveClass('accordion-item');
+    expect(screen.getByRole('button')).toHaveClass('collapsed');
   });
 
   test('should render expanded', () => {
-    render(<AccordionItem title="Testing" ownerSelector="#ownerSelector" expanded={true} />);
+    render(<AccordionItem title="rendering expanded" ownerSelector="#ownerSelector" expanded={true} />);
     expect(screen.getByRole('button')).toHaveClass('accordion-button');
     expect(screen.getByRole('button')).not.toHaveClass('collapsed');
   });
 
-  test('should render default collapsed', () => {
-    render(<AccordionItem title="Testing" ownerSelector="#ownerSelector" />);
-    expect(screen.getByRole('button')).toHaveClass('collapsed');
-  });
-
   test('should collapse when click on button', () => {
     render(
-      <Accordion title="Container Testing" id="ownerSelector">
+      <Accordion title="collapse when click" id="ownerSelector">
         <AccordionItem title="Testing" ownerSelector="#ownerSelector" />
       </Accordion>
     );
