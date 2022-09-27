@@ -39,7 +39,8 @@ jobs:
         if: always() # Also generate the report if tests are failing
         uses:  davelosert/vitest-coverage-report-action@v1
 
-      - uses: romeovs/lcov-reporter-action@v0.2.16
+      - name: 'Post Coverage'
+        uses: romeovs/lcov-reporter-action@v0.2.16
 
       - name: Build
         run: yarn build
