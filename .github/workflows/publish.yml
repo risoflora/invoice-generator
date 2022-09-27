@@ -40,7 +40,7 @@ jobs:
         run: yarn install --frozen-lockfile --silent --non-interactive
 
       - name: Test
-        run: yarn test --run --silent --reporter default --coverage
+        run: yarn test --run --silent --coverage
 
       - name: Semantic Release
         env:

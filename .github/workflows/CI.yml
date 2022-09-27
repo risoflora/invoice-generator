@@ -32,8 +32,19 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Test
-        run: yarn test --run --silent --reporter default --coverage
+#      - name: Test
+#        run: yarn test --run --silent --reporter json --coverage
+
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        id: coverage
+        with:
+          package-manager: yarn
+          test-script: yarn test --run --coverage
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: ${{ steps.coverage.outputs.report }}
+
+      - uses: romeovs/lcov-reporter-action@v0.2.16
 
       - name: Build
         run: yarn build
